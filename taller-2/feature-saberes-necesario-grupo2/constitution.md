@@ -1,0 +1,6 @@
+## Art. 3 · Quality Standards (estándares de calidad)
+- cobertura mínima de tests, reglas de lint, formateador, presupuesto de rendimiento…
+## Art. 4 · Architecture Principles (principios de arquitectura)
+- reglas de capas, patrones permitidos, anti-patrones prohibidos…
+## Art. 7 · Boundaries (límites — las tres listas)
+- ALWAYS DO: <…> · ASK FIRST: <…> · NEVER DO: <…>
