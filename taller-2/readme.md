@@ -1,1 +1,1 @@
-!
+# equipo e integrantes + coverage matrix (§7) + veredicto del gate de claridad
