@@ -34,7 +34,7 @@ Plataforma para la gestión de preguntas, administración academica y generació
 |---|---|
 | Estilo | PSR-12, verificado con Laravel Pint |
 | Nombres de tablas | snake_case, plural |
-| Primary keys | id incremental |
+| Primary keys | id bigint incremental |
 | Timestamps | TIMESTAMPTZ, con `created_at` y `updated_at` |
 | Soft deletes | Para todas las tablas |
 | Migraciones | Archivos versionados en `database/migrations/` |
