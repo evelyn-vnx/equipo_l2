@@ -2,8 +2,6 @@
 
 ## 1. Objetivo del proyecto
 
-Plataforma EdTech para la gestión de bancos de preguntas, generación automatizada de materiales y exámenes (PDF/DOCX), y administración académica. El backend expone APIs RESTful que el frontend SPA consume. El proyecto se encuentra en migración progresiva de una arquitectura Laravel MVC tradicional hacia una arquitectura Hexagonal (Ports & Adapters) con Domain-Driven Design, manteniendo ambos paradigmas en coexistencia hasta completar la migración.
-
 Plataforma para la gestión de preguntas, administración academica y generación automatizada de materiales de balotario y examenes. El backend es un aplicativo APIs Restful con un frontend SPA. El proyecto backend está en una migración progresiva de una arquitectura MVC tradicional a una arquitectura hexagonal con filosofia Domain Drive Design.
 
 ## 2. Reglas arquitectónicas
