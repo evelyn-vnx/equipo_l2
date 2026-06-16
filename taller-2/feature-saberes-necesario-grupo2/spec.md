@@ -56,13 +56,13 @@ Como Administrador o Didi, quiero crear un saber necesario con imagen SVG, curso
 ### US-3 (P1): Visualizar el listado de saberes necesarios
 Como Administrador o Didi, quiero ver la lista de saberes con sus metadatos y aplicar filtros, para encontrar y gestionar rápidamente un saber específico.
 
-**AC-3.1** — Dado que el usuario accede a la sección "Saberes Necesarios", cuando la pantalla carga, entonces se muestra una tabla con las columnas: N.°, Código, Curso `[código][nombre]`, Tema `[código][nombre]`, Nombre, Estado, Acciones. El filtro de Estado muestra por defecto "Activo".
+**AC-3.1** — Dado que el usuario accede a la sección "Saberes Necesarios", cuando la pantalla carga, entonces se muestra una tabla paginada mostrando 10 registros por defecto, con las columnas: N.° (correlativo, incremental +1), Código, Curso `[código][nombre]`, Tema `[código][nombre]`, Nombre, Fecha Creación, Estado, Acciones (Ver, Editar y Eliminar). El filtro de Estado muestra por defecto "Activo".
 
 **AC-3.2** — Dado que el usuario aplica un filtro por texto (código o nombre), cuando escribe al menos 1 carácter en el buscador, entonces la tabla muestra solo los saberes cuyo código o nombre contiene ese texto (búsqueda no sensible a mayúsculas).
 
 **AC-3.3** — Dado que el usuario filtra por Curso, cuando selecciona un curso de la lista (restringida a los cursos asignados al usuario), entonces la tabla muestra únicamente los saberes pertenecientes a ese curso.
 
-**AC-3.4** — Dado que el usuario filtra por Estado, cuando selecciona "Inhabilitado", entonces la tabla muestra solo los saberes con ese estado.
+**AC-3.4** — Dado que el usuario filtra por Estado, cuando selecciona "Inactivo", entonces la tabla muestra solo los saberes con ese estado.
 
 ---
 
@@ -93,16 +93,14 @@ Como Administrador o Didi, quiero editar el tema, nombre e imagen SVG de un sabe
 ### US-6 (P2): Cambiar el estado de un saber necesario
 Como Administrador o Didi, quiero habilitar o inhabilitar un saber, para controlar su disponibilidad sin eliminarlo.
 
-**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Habilitado" e "Inhabilitado" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
+**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Habilitado" e "Inactivo" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
 
 ---
 
 ### US-7 (P1): Eliminar un saber necesario
 Como Administrador o Didi, quiero eliminar un saber que no esté en uso, para depurar el catálogo sin afectar el contenido activo.
 
-**AC-7.1** — Dado que el usuario intenta eliminar un saber que **no** está asociado a ninguna pregunta, cuando confirma la eliminación, entonces el saber se elimina de la base de datos y desaparece del listado.
-
-**AC-7.2** — Dado que el usuario intenta eliminar un saber que **sí** está asociado a al menos una pregunta, cuando el sistema evalúa la solicitud, entonces bloquea la eliminación y muestra un mensaje indicando que el saber está en uso (número de preguntas asociadas, si está disponible).
+**AC-7.1** — Dado que el usuario intenta eliminar un saber, cuando confirma la eliminación, entonces el saber se elimina de la base de datos y desaparece del listado.
 
 ---
 
@@ -117,13 +115,12 @@ Como Administrador o Didi, quiero ver qué preguntas usan un saber específico, 
 
 ## 3. Requisitos no funcionales (NFR)
 
-- **NFR-1 — Rendimiento:** La carga inicial del listado de Saberes Necesarios debe completarse en menos de 2 segundos con hasta 500 registros activos en condiciones de red normal.
+- **NFR-1 — Rendimiento:** La carga inicial del listado de Saberes Necesarios debe completarse en menos de 2 segundos.
 - **NFR-2 — Formato de imagen:** Solo se aceptan archivos `.svg`. El sistema debe validar el tipo MIME (`image/svg+xml`) y la extensión en el lado servidor, no solo en el cliente.
 - **NFR-3 — Unicidad del código:** El código generado `[cod_curso]-[cod_tema][correlativo]` debe ser único en la base de datos; la generación debe ser atómica para evitar colisiones en inserciones concurrentes.
 - **NFR-4 — Longitud de nombre:** El campo Nombre del saber acepta un máximo de 150 caracteres. La validación debe ejecutarse tanto en el front-end (contador visible) como en el back-end.
-- **NFR-5 — Responsive de imagen SVG:** La previsualización del SVG dentro del modal debe escalar usando unidades relativas (`max-width: 100%; max-height: 100%;`) para adaptarse a la resolución y tamaño de ventana del usuario sin pérdida de calidad (SVG vectorial).
-- **NFR-6 — Control de acceso:** El acceso a la sección y todas sus operaciones deben verificarse por rol en el back-end; la validación solo en el front-end no es suficiente.
-- **NFR-7 — Trazabilidad:** Cada creación, edición, cambio de estado y eliminación debe quedar registrada en el log de auditoría del sistema con usuario, timestamp y acción realizada.
+- **NFR-5 — Control de acceso:** El acceso a la sección y todas sus operaciones deben verificarse por rol en el back-end; la validación solo en el front-end no es suficiente.
+- **NFR-6 — Trazabilidad:** Cada creación, edición, cambio de estado y eliminación debe quedar registrada en el log de auditoría del sistema con usuario, timestamp y acción realizada.
 
 ---
 
@@ -132,9 +129,8 @@ Como Administrador o Didi, quiero ver qué preguntas usan un saber específico, 
 - **Nombre en el límite exacto (150 caracteres):** El sistema debe guardar correctamente un nombre de exactamente 150 caracteres; el error solo aplica desde el carácter 151.
 - **Nombre idéntico en distinto tema:** `"Fracciones propias"` en Tema A y `"Fracciones propias"` en Tema B del mismo curso son válidos y no deben generar conflicto.
 - **Nombre idéntico en distinto curso:** Permitido sin restricción.
-- **SVG malformado o con scripts embebidos:** El sistema debe rechazar SVGs que contengan etiquetas `<script>` u otros vectores XSS, incluso si el tipo de archivo es técnicamente SVG válido.
-- **Cambio de tema en saber usado por preguntas:** Si se edita el tema de un saber que ya está vinculado a preguntas, el código cambia; se debe definir si las preguntas existentes se actualizan automáticamente o si se bloquea el cambio de tema (pendiente de aclaración).
-- **Correlativo al llegar a 6 dígitos (999999):** Si el correlativo supera 6 dígitos, el sistema debe manejar el desbordamiento sin truncar el código (pendiente definición de política).
+- **SVG malformado o con scripts embebidos:** El sistema debe rechazar SVGs con código malicioso.
+- **Correlativo al llegar a 4 dígitos (9999):** Si el correlativo supera 4 dígitos, el sistema no debe permitir el registro o actualización del saber, y notificar al usuario con el mensaje "No se pudo guardar el saber.".
 - **Carga simultánea del mismo nombre en el mismo tema:** Dos usuarios crean en paralelo el mismo nombre en el mismo tema; la restricción de unicidad debe resolverse a nivel de base de datos (constraint único), no solo de lógica de aplicación.
 - **Imagen SVG de gran tamaño (> 5 MB):** Definir límite máximo de peso del archivo SVG aceptado; sin límite el servidor podría sobrecargarse.
 
@@ -143,21 +139,18 @@ Como Administrador o Didi, quiero ver qué preguntas usan un saber específico, 
 ## 5. Assumptions
 
 - Asumimos que la lista de Cursos y Temas ya existe y es mantenida por otro módulo del sistema; si es falso, se requiere incorporar la gestión de temas en este mismo alcance.
-- Asumimos que el correlativo del código es numérico, secuencial y con formato de 6 dígitos con ceros a la izquierda (ej. `000001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
+- Asumimos que el correlativo del código es numérico, secuencial y con formato de 4 dígitos con ceros a la izquierda (ej. `0001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
 - Asumimos que "Didi" es un rol con los mismos permisos operativos que "Administrador" dentro de esta funcionalidad; si es falso, se deben especificar las restricciones diferenciales del rol Didi.
 - Asumimos que los Cursos disponibles en el filtro están restringidos a los asignados al usuario autenticado; si es falso, usuarios con acceso amplio verán cursos que no les corresponden.
-- Asumimos que la eliminación de un saber en uso es un bloqueo total (no hay opción de forzar); si es falso, se debe definir el flujo de eliminación forzada con sus implicancias.
 - Asumimos que la previsualización SVG se renderiza directamente en el navegador sin conversión intermedia a raster; si es falso, se requiere un servicio de conversión o sanitización adicional.
 
 ---
 
 ## 6. Aclaraciones (máx 3)
 
-1. **Cambio de tema en saber vinculado a preguntas:** ¿El sistema permite cambiar el tema de un saber que ya está en uso? Si sí, ¿las referencias en las preguntas existentes se actualizan automáticamente con el nuevo código, o el cambio queda restringido mientras existan preguntas activas?
+1. **Tamaño máximo del archivo SVG:** ¿Existe un límite de peso (en KB o MB) para los archivos SVG que se pueden cargar? Sin este límite definido no es posible implementar la validación de tamaño en front y back-end.
 
-2. **Tamaño máximo del archivo SVG:** ¿Existe un límite de peso (en KB o MB) para los archivos SVG que se pueden cargar? Sin este límite definido no es posible implementar la validación de tamaño en front y back-end.
-
-3. **Sanitización de SVG:** ¿El equipo de seguridad ya tiene un pipeline de sanitización para SVGs (eliminación de `<script>`, `<foreignObject>`, event handlers)? Si no, esto debe ser un NFR adicional antes de habilitar la carga de SVG en producción.
+2. **Sanitización de SVG:** ¿El equipo de seguridad ya tiene un pipeline de sanitización para SVGs (eliminación de `<script>`, `<foreignObject>`, event handlers)? Si no, esto debe ser un NFR adicional antes de habilitar la carga de SVG en producción.
 
 ---
 
@@ -165,23 +158,20 @@ Como Administrador o Didi, quiero ver qué preguntas usan un saber específico, 
 
 **DENTRO:**
 - Nueva sección "Saberes Necesarios" dentro del módulo de Cursos.
-- CRUD completo: Crear, leer (listado + detalle), editar (tema, nombre, imagen), cambiar estado (habilitar/inhabilitar), eliminar (solo si no está en uso).
+- CRUD completo: Crear, leer (listado + detalle), editar (tema, nombre, imagen), cambiar estado (activo/inactivo), eliminar (solo si no está en uso).
 - Generación automática de código único con estructura `[cod_curso]-[cod_tema][correlativo]`.
 - Validación de unicidad de nombre a nivel de tema-curso.
 - Límite de 150 caracteres en el nombre del saber.
 - Carga y previsualización de imagen SVG adaptada al tamaño de pantalla del usuario.
 - Actualización automática del código al cambiar de tema.
 - Filtros por código/nombre, curso (restringido al usuario), tema y estado.
-- Visualización del listado de preguntas que usan un saber.
 - Control de acceso por rol (Administrador y Didi).
 - Mensajes de confirmación y error definidos en los criterios de aceptación.
 
 **FUERA (explícito):**
 - Gestión del catálogo de Cursos o Temas (son entidades preexistentes).
-- Eliminación forzada de un saber en uso.
 - Asociación directa saber-pregunta desde esta pantalla (solo visualización de uso).
 - Migración automática de saberes actualmente en solucionarios de preguntas hacia la nueva galería.
 - Exportación o importación masiva de saberes (bulk upload/download).
 - Versionado o historial de cambios del saber (más allá del log de auditoría).
-- Previsualización de SVG fuera del modal (thumbnails en listado).
 - Edición del contenido SVG dentro del sistema (el sistema solo almacena y muestra el archivo).
