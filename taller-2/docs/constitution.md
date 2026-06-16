@@ -2,7 +2,7 @@
 
 ## 1. Objetivo del proyecto
 
-Plataforma para la gestión de preguntas, administración academica y generación automatizada de materiales de balotario y examenes. El backend es un aplicativo APIs Restful con un frontend SPA. El proyecto backend está en una migración progresiva de una arquitectura MVC tradicional a una arquitectura hexagonal con filosofia Domain Drive Design.
+Plataforma para la gestión de preguntas, administración academica y generación automatizada de materiales de balotario y examenes. El backend expone APIs RESTful que el frontend SPA consume. El backend está en migración progresiva de MVC tradicional a arquitectura hexagonal con DDD. El frontend es una SPA modular construida con Vue 3, Vuetify 3, ruteo basado en archivos, control de acceso con CASL y comunicación vía Axios, organizada en módulos autocontenidos dentro de `src/modules/`.
 
 ## 2. Reglas arquitectónicas
 
@@ -22,9 +22,9 @@ Plataforma para la gestión de preguntas, administración academica y generació
 6. **Transaccionalidad explícita** — Las operaciones que requieren atomicidad se envuelven con `TransactionalUseCase`.
 
 ### Frontend
-8. **Frontend modular** — Cada funcionalidad se organiza en un módulo autocontenido dentro de `src/modules/` con sus propios componentes, servicios, modelos y composables.
-9. **Ruteo basado en archivos** — Las páginas del frontend se crean como archivos `.vue` dentro de `src/pages/` siguiendo la estructura de directorios que define la ruta.
-10. **CASL para autorización** — Todo control de acceso en frontend se realiza mediante `@casl/ability` con acciones y sujetos definidos, no mediante lógica ad-hoc.
+8. **Frontend modular** — Cada funcionalidad se organiza en un módulo autocontenido dentro de `src/modules/` con subdirectorios para componentes, servicios, modelos, diálogos, páginas, enums y composables. Estructura típica: `components/`, `dialogs/`, `services/`, `models/`, `enums/`, `pages/`.
+9. **Ruteo basado en archivos** — Las páginas se crean como archivos `.vue` dentro de `src/pages/` siguiendo la estructura de directorios que define la ruta. La configuración de título, sujeto CASL y acción se define mediante `definePage({ meta: { title, subject, action } })`.
+10. **CASL para autorización** — Todo control de acceso se realiza mediante `@casl/ability` con sujetos en kebab-case y acciones definidas, declarados en `definePage()` y en la navegación lateral (`src/navigation/vertical/`), no mediante lógica ad-hoc.
 
 ## 3. Convenciones de código
 
@@ -53,15 +53,22 @@ Plataforma para la gestión de preguntas, administración academica y generació
 |---|---|
 | Estilo | Airbnb (ESLint) + Prettier |
 | Componentes Vue | `<script setup>` + Composition API |
-| Nombres de archivos `.vue` | PascalCase |
+| Nombres de archivos `.vue` (generales) | PascalCase |
+| Nombres de páginas de módulo | PascalCase, sufijo `.page.vue` |
+| Nombres de diálogos modales | PascalCase, sufijo `.dialog.vue` |
 | Nombres de servicios | camelCase, sufijo `.service.js` o `.service.ts` |
 | Nombres de stores | camelCase, sufijo `.store.js` |
 | Nombres de composables | prefijo `use`, camelCase (`useAuth.ts`) |
 | Nombres de modelos/TS | camelCase, sufijo `.model.ts` |
+| Nombres de archivos de constantes/enums | camelCase, sufijo `.enum.js` o `.header.js` |
 | Auto-imports | Usar `unplugin-auto-import` y `unplugin-vue-components` |
 | Store | Pinia con Composition API (setup store) |
 | Comunicación con API | Axios instance única (`odiseoApi`) con interceptores |
-| Manejo de errores | SweetAlert2 para toasts, Sentry para tracking |
+| Lazy loading | `defineAsyncComponent` para diálogos y componentes pesados |
+| Comunicación página-diálogo | `provide` / `inject` para recarga de datos al cerrar diálogos |
+| Iconos | Remix Icon (`ri-*`) |
+| Tablas de datos paginadas | `VDataTableServer` con `AppPagination` para paginación servidor |
+| Manejo de errores | SweetAlert2 via `useSwalAlert` composable para toasts y modales; Sentry para tracking |
 | CSS | SCSS con Vuetify utility classes |
 
 ## 4. Restricciones técnicas
