@@ -104,15 +104,6 @@ Como Administrador o Didi, quiero eliminar un saber que no esté en uso, para de
 
 ---
 
-### US-8 (P2): Visualizar el uso de un saber en preguntas
-Como Administrador o Didi, quiero ver qué preguntas usan un saber específico, para evaluar el impacto antes de editarlo o inhabilitarlo.
-
-**AC-8.1** — Dado que el usuario accede al listado de uso de un saber, cuando existen preguntas asociadas, entonces el sistema muestra la lista de preguntas vinculadas (al menos su identificador o título).
-
-**AC-8.2** — Dado que el usuario accede al listado de uso de un saber, cuando **no** existen preguntas asociadas, entonces el sistema muestra: _"Este saber necesario no está siendo utilizado en ninguna pregunta."_
-
----
-
 ## 3. Requisitos no funcionales (NFR)
 
 - **NFR-1 — Rendimiento:** La carga inicial del listado de Saberes Necesarios debe completarse en menos de 2 segundos.
