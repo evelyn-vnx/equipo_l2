@@ -91,9 +91,9 @@ Como Administrador o Didi, quiero editar el tema, nombre e imagen SVG de un sabe
 ---
 
 ### US-6 (P2): Cambiar el estado de un saber necesario
-Como Administrador o Didi, quiero habilitar o inhabilitar un saber, para controlar su disponibilidad sin eliminarlo.
+Como Administrador o Didi, quiero activar o inactivar un saber, para controlar su disponibilidad sin eliminarlo.
 
-**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Habilitado" e "Inactivo" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
+**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Activo" e "Inactivo" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
 
 ---
 

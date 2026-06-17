@@ -89,7 +89,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - `routes.ts` (opcional) o registro en el sistema de rutas existente.
 
 **Navegación — `src/navigation/vertical/odiseo/` (archivo existente a modificar):**
-- Agregar entrada "Saberes Necesarios" dentro del módulo Cursos, con `subject: 'EssentialKnowledge'`, `action: 'listar'`, visible solo para roles Admin y Didi (constitution §2.10). Ruta `odiseo-cursos-essential-knowledge`.
+- Agregar entrada "Saberes Necesarios" dentro del módulo Cursos, con `subject: 'essential-knowledge'`, `action: 'listar'`, visible solo para roles Admin y Didi (constitution §2.10). Ruta `odiseo-cursos-essential-knowledge`.
 
 ## 3. Decisiones de arquitectura (mini-ADR) ← §11 (ADRs)
 
@@ -145,7 +145,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 
 ## 5. Trazabilidad: cada US del spec → dónde se implementa en este plan
 
-- **US-1 (Acceder a sección Saberes Necesarios)** → Navegación lateral (`src/navigation/vertical/odiseo/`) con entrada "Saberes Necesarios" protegida por CASL (`subject: 'EssentialKnowledge'`, `action: 'listar'`). Ruta de página (`src/pages/odiseo/cursos/essential-knowledge/index.vue`). Backend: ruta `GET api/v2/catalog/essential-knowledge` con middleware `permission:essential_knowledge.listar`.
+- **US-1 (Acceder a sección Saberes Necesarios)** → Navegación lateral (`src/navigation/vertical/odiseo/`) con entrada "Saberes Necesarios" protegida por CASL (`subject: 'essential-knowledge'`, `action: 'listar'`). Ruta de página (`src/pages/odiseo/cursos/essential-knowledge/index.vue`). Backend: ruta `GET api/v2/catalog/essential-knowledge` con middleware `permission:essential_knowledge.listar`.
 - **US-2 (Crear un saber necesario)** → `EssentialKnowledge.dialog.vue` (modal creación), `StoreEssentialKnowledgeUseCase` (generación código + validación unicidad), `StoreEssentialKnowledgeRequestValidator` (validación SVG obligatorio, nombre ≤150 chars, curso-tema existentes), `UploadSvgEssentialKnowledgeUseCase` (subida SVG a GCS y sanitización).
 - **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros con columnas del spec AC-3.1), `FilterEssentialKnowledgeUseCase` (filtros código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
 - **US-4 (Ver imagen SVG del saber)** → `EssentialKnowledgeShow.dialog.vue` (imagen SVG responsive, meta-datos, manejo de error AC-4.2), `GetByIdEssentialKnowledgeUseCase` (retorna URL firmada de GCS), `GetByIdEssentialKnowledgeResponse`.
