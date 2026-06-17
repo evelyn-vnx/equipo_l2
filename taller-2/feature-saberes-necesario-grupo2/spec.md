@@ -73,7 +73,7 @@ Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero ver la lis
 ### US-4 (P1): Ver la imagen de un saber necesario
 Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero visualizar la imagen SVG de un saber en pantalla completa adaptada a mi resolución, para revisar su contenido sin distorsión.
 
-**AC-4.1** — Dado que el usuario hace clic en la acción "Ver" de un saber y tiene permiso de "Listar" sobre Saberes Necesarios, cuando el modal abre, entonces la imagen SVG se renderiza escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, independientemente de la resolución de pantalla del usuario (responsive dentro del modal).
+**AC-4.1** — Dado que el usuario hace clic en la acción "Ver" de un saber y tiene permiso de "Listar" sobre Saberes Necesarios, cuando el modal abre, entonces el sistema muestra en el mismo modal los datos del saber (Código, Nombre, Curso y Tema) junto con la imagen SVG, la cual se renderiza escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, independientemente de la resolución de pantalla del usuario (responsive dentro del modal).
 
 **AC-4.2** — Dado que la imagen SVG no se puede cargar, cuando el modal intenta renderizarla, entonces muestra el mensaje: _"No se pudo visualizar la imagen del saber necesario."_
 
