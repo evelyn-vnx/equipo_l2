@@ -135,7 +135,7 @@ Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar
 ## 5. Assumptions
 
 - Asumimos que la lista de Cursos y Temas ya existe y es mantenida por otro módulo del sistema; si es falso, se requiere incorporar la gestión de temas en este mismo alcance.
-- Asumimos que el correlativo del código es numérico, global por curso, secuencial y con formato de 4 dígitos con ceros a la izquierda (ej. `0001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
+- Asumimos que el correlativo del código es numérico, global por tema, secuencial y con formato de 4 dígitos con ceros a la izquierda (ej. `0001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
 - Asumimos que "Didi" es un rol con los mismos permisos operativos que "Administrador" dentro de esta funcionalidad; si es falso, se deben especificar las restricciones diferenciales del rol Didi.
 - Asumimos que los Cursos disponibles en el filtro están restringidos a los asignados al usuario autenticado; si es falso, usuarios con acceso amplio verán cursos que no les corresponden.
 - Asumimos que la previsualización SVG se renderiza directamente en el navegador sin conversión intermedia a raster; si es falso, se requiere un servicio de conversión o sanitización adicional.
