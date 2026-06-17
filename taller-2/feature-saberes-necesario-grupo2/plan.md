@@ -4,7 +4,7 @@ Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal
 
 ## 1. Enfoque técnico (alto nivel)
 
-- **Base de datos**: Crear tabla `essential_knowledges` con `id` bigint auto-increment, campos `code`, `name` (varchar 150), `course_id` (FK), `topic_id` (FK), `svg_filename` (GCS), `fl_status` (boolean), `created_by`, `deleted_at`. Constraint unique `(course_id, topic_id, name)`. Crear funciones de BD `fn_create_essential_knowledge`, `fn_update_essential_knowledge`, `fn_list_essential_knowledge`, `fn_get_essential_knowledge_by_id`. Migración de permisos (`essential_knowledge.listar`, `.crear`, `.actualizar`, `.eliminar`).
+- **Base de datos**: Crear tabla `essential_knowledges` con `id` bigint auto-increment, campos `code`, `name` (varchar 150), `course_id` (FK), `topic_id` (FK), `svg_filename` (GCS), `is_active` (boolean), `created_by`, `deleted_at`. Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL`. Crear funciones de BD `fn_create_essential_knowledge`, `fn_update_essential_knowledge`, `fn_list_essential_knowledge`, `fn_get_essential_knowledge_by_id`. Migración de permisos (`essential_knowledge.listar`, `.crear`, `.actualizar`, `.eliminar`).
 - **Backend**: Módulo DDD completo en `src/App/Modules/V2/Catalog/EssentialKnowledge/` siguiendo la misma estructura del módulo `Area` (constitution §2). Capas: Domain (entidades, repositorios CQS), Application (use cases, DTOs inmutables), Infrastructure (controller, mappers, validators, routes, query builders, providers). Flujo: `Validator → Mapper → Controller → UseCase → Repository`. SVG se sube a GCS mediante `FileStorageInterface` (path `/essential-knowledge/{uuid}.svg`), en BD solo el filename. Código generado en `StoreEssentialKnowledgeUseCase` consultando último correlativo por (course_id, topic_id). Toda operación protegida con middleware `permission:essential_knowledge.*` (constitution §2.10, §5). Use case `TransactionalUseCase` para operaciones atómicas (constitution §2.7).
 - **Frontend**: Feature module en `src/modules/essential-knowledge/` con página de listado paginado (10 registros), filtros por código/nombre/curso/tema/estado. Diálogos: creación, edición, visualización SVG (responsive), cambio de estado, eliminación. Validación client-side de SVG (MIME `image/svg+xml`, tamaño). Navegación lateral en módulo Cursos, protegida por CASL (constitution §2.10). Comunicación vía Axios con servicio dedicado.
 
@@ -13,7 +13,7 @@ Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal
 ### Base de datos — `odiseo-backend/database/migrations/`
 
 **Migraciones de tabla a crear:**
-- `database/migrations/tables/table_essential_knowledges/2026_XX_XX_XXXXXX_create_table_essential_knowledges.php` — tabla principal con campos: `id` (bigint, auto-increment), `code` (varchar 20 unique), `name` (varchar 150), `course_id` (FK → courses), `topic_id` (FK → topics), `svg_filename` (varchar 255 nullable), `fl_status` (boolean default true), `created_by` (FK → users), `created_at`, `updated_at`, `deleted_at`. Unique constraint `(course_id, topic_id, name)`.
+- `database/migrations/tables/table_essential_knowledges/2026_XX_XX_XXXXXX_create_table_essential_knowledges.php` — tabla principal con campos: `id` (bigint, auto-increment), `code` (varchar 20 unique), `name` (varchar 150), `course_id` (FK → courses), `topic_id` (FK → topics), `svg_filename` (varchar 255 nullable), `is_active` (boolean default true), `created_by` (FK → users), `created_at`, `updated_at`, `deleted_at`. Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL`.
 - `database/migrations/tables/table_role_permissions/2026_XX_XX_XXXXXX_add_permissions_essential_knowledges.php` — insertar permisos: `essential_knowledge.listar`, `essential_knowledge.crear`, `essential_knowledge.actualizar`, `essential_knowledge.eliminar`. Asignar a roles Admin y Didi.
 
 **Funciones de BD a crear:**
@@ -29,7 +29,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 **Domain:**
 - `Domain/Entities/StoreEssentialKnowledgeEntity.php` — `code`, `name`, `courseId`, `topicId`, `svgFilename`, `createdBy`
 - `Domain/Entities/UpdateEssentialKnowledgeEntity.php` — `id`, `name`, `topicId`, `svgFilename`, `updatedBy`, `?newCode`
-- `Domain/Entities/UpdateIsActiveEssentialKnowledgeEntity.php` — `id`, `flStatus`, `updatedBy`
+- `Domain/Entities/UpdateIsActiveEssentialKnowledgeEntity.php` — `id`, `isActive`, `updatedBy`
 - `Domain/Entities/DeleteEssentialKnowledgeEntity.php` — `id`, `deletedBy`
 - `Domain/Entities/GetEssentialKnowledgeByIdEntity.php` — retorno con datos + url temporal GCS
 - `Domain/Entities/ListEssentialKnowledgeEntity.php` — representación para listado
@@ -48,7 +48,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - `Application/Dtos/Requests/UploadSvgEssentialKnowledgeRequestDto.php` — datos para subida SVG
 - `Application/UseCases/StoreEssentialKnowledgeUseCase.php` — genera código, valida unicidad, persiste (constitution §2.3, §2.7)
 - `Application/UseCases/UpdateEssentialKnowledgeUseCase.php` — si cambia topic_id, regenera código, valida unicidad
-- `Application/UseCases/UpdateIsActiveEssentialKnowledgeUseCase.php` — cambia fl_status
+- `Application/UseCases/UpdateIsActiveEssentialKnowledgeUseCase.php` — cambia is_active
 - `Application/UseCases/DeleteEssentialKnowledgeUseCase.php` — soft delete
 - `Application/UseCases/GetByIdEssentialKnowledgeUseCase.php` — obtiene + genera URL firmada GCS
 - `Application/UseCases/FilterEssentialKnowledgeUseCase.php` — listado paginado con filtros
@@ -108,20 +108,20 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 **POR QUÉ:** Constitution §4 exige GCS para almacenamiento de archivos. Consistente con el flujo agreement del módulo Area. GCS maneja escalabilidad y caché.
 **ALTERNATIVA DESCARTADA:** SVG como BLOB en BD (impacta rendimiento y backup). Base64 en columna text (infla la fila). Almacenamiento local en disco (no escala horizontalmente).
 
-### ADR-4: Validación de unicidad en BD + aplicación
-**DECISIÓN:** Constraint unique `(course_id, topic_id, name)` en la tabla + validación en el UseCase antes de insertar/actualizar.
-**POR QUÉ:** El spec §4 exige resolver concurrencia a nivel BD. La validación en aplicación da mejor experiencia de usuario (mensaje inmediato sin esperar error BD).
-**ALTERNATIVA DESCARTADA:** Solo validación en aplicación — riesgo de condición de carrera en inserciones concurrentes. Solo constraint BD — experiencia pobre (error 500 sin mensaje descriptivo).
+### ADR-4: Validación de unicidad en BD + aplicación (solo activos)
+**DECISIÓN:** Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL` + validación en el UseCase antes de insertar/actualizar. Un soft-delete no bloquea la re-creación del mismo nombre.
+**POR QUÉ:** El spec §4 exige resolver concurrencia a nivel BD. Al ser soft delete, un registro eliminado no debería impedir crear uno nuevo con el mismo nombre. La validación en aplicación da mejor experiencia de usuario (mensaje inmediato sin esperar error BD).
+**ALTERNATIVA DESCARTADA:** Constraint unique global `(course_id, topic_id, name)` — un soft-delete bloquearía permanentemente ese nombre, violando el principio de menor sorpresa.
 
 ### ADR-5: Sanitización de SVG obligatoria
 **DECISIÓN:** Todo SVG subido se sanitiza (eliminar `<script>`, `<foreignObject>`, event handlers `on*`) antes de almacenarse en GCS.
 **POR QUÉ:** Los SVGs pueden contener scripts maliciosos (XSS). El spec §6 lo señala como riesgo. Constitution §5 exige protección contra XSS.
 **ALTERNATIVA DESCARTADA:** Confiar en validación client-side (bypasseable). Desactivar SVG rendering en frontend (pérdida de funcionalidad).
 
-### ADR-6: Eliminación lógica con estado activo/inactivo
-**DECISIÓN:** La tabla usa soft delete (`deleted_at`) más campo `fl_status` para activo/inactivo. El listado excluye eliminados; el filtro de estado filtra por `fl_status`.
-**POR QUÉ:** Constitution §3 exige soft delete para datos críticos. El spec requiere dos niveles de disponibilidad: inactivo (visible, no seleccionable) y eliminado (no visible).
-**ALTERNATIVA DESCARTADA:** Solo soft delete (pérdida de semántica activo/inactivo). Solo estado booleano (no permite recuperación ante eliminación accidental).
+### ADR-6: `deleted_at` para soft delete, `is_active` para visibilidad en gestión
+**DECISIÓN:** `deleted_at` para soft delete (registro invisible en toda la plataforma). `is_active` para desactivación lógica donde el registro sigue visible en el módulo de gestión (pero no seleccionable). El listado por defecto muestra activos e inactivos (excepto eliminados); el filtro de estado opera sobre `is_active`.
+**POR QUÉ:** `fl_status` era redundante con `deleted_at` — ambos cumplían el mismo rol de soft delete. Se reemplaza por `is_active` con semántica distinta: un registro inactivo (`is_active = false`) sigue siendo visible para que el usuario pueda reactivarlo; uno eliminado (`deleted_at` not null) desaparece por completo. Constitution §3 exige soft delete.
+**ALTERNATIVA DESCARTADA:** Usar solo `deleted_at` (un registro inactivo desaparecería, impidiendo reactivación). Usar `fl_status` legacy (redundante con `deleted_at`, confundía ambos conceptos).
 
 ### ADR-7: Sanitización de SVG obligatoria ante código malicioso
 **DECISIÓN:** Se implementa un pipeline de sanitización que elimina elementos peligrosos (`<script>`, `<foreignObject>`, `on*`, `javascript:`, etc.) antes del almacenamiento.
@@ -136,7 +136,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 ## 4. Riesgos y dependencias
 
 - **Dependencia crítica**: El catálogo de Cursos y Temas debe preexistir (Assumption spec §5). Si no existe, el alcance debe ampliarse.
-- **Concurrencia en creación**: Dos usuarios crean el mismo nombre en el mismo tema simultáneamente. Mitigado por ADR-4 (constraint unique en BD).
+- **Concurrencia en creación**: Dos usuarios crean el mismo nombre en el mismo tema simultáneamente. Mitigado por ADR-4 (partial unique index en BD).
 - **SVG malicioso (XSS)**: Scripts embebidos en SVG. Mitigado por ADR-5 (sanitización obligatoria).
 - **Correlativo agotado (>9999)**: El tema alcanzó el máximo de saberes. Mitigado por ADR-8 (validación + mensaje). Plan de contingencia: evaluar expansión a 5 dígitos.
 - **Google Cloud Storage**: Timeout o fallo de autenticación. Mitigado con reintentos, timeout configurable y logging.
@@ -150,6 +150,6 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros con columnas del spec AC-3.1), `FilterEssentialKnowledgeUseCase` (filtros código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
 - **US-4 (Ver imagen SVG del saber)** → `EssentialKnowledgeShow.dialog.vue` (imagen SVG responsive, meta-datos, manejo de error AC-4.2), `GetByIdEssentialKnowledgeUseCase` (retorna URL firmada de GCS), `GetByIdEssentialKnowledgeResponse`.
 - **US-5 (Editar un saber necesario)** → `EssentialKnowledge.dialog.vue` (modo edición, campos editables: tema, nombre, imagen), `UpdateEssentialKnowledgeUseCase` (regenera código si cambia tema, valida unicidad), `UpdateEssentialKnowledgeRequestValidator`.
-- **US-6 (Cambiar estado activo/inactivo)** → `EssentialKnowledgeChangeState.dialog.vue` (confirmación), `UpdateIsActiveEssentialKnowledgeUseCase`, `UpdateIsActiveEssentialKnowledgeValidator`, `fn_update_essential_knowledge` (BD actualiza fl_status).
+- **US-6 (Cambiar estado activo/inactivo)** → `EssentialKnowledgeChangeState.dialog.vue` (confirmación), `UpdateIsActiveEssentialKnowledgeUseCase`, `UpdateIsActiveEssentialKnowledgeValidator`, `fn_update_essential_knowledge` (BD actualiza is_active).
 - **US-7 (Eliminar un saber necesario)** → `EssentialKnowledgeDelete.dialog.vue` (confirmación), `DeleteEssentialKnowledgeUseCase` (soft delete), `DeleteEssentialKnowledgeRequestValidator`.
 

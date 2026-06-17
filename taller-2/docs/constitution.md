@@ -37,6 +37,7 @@ Plataforma para la gestión de preguntas, administración academica y generació
 | Primary keys | id bigint incremental |
 | Timestamps | TIMESTAMPTZ, con `created_at` y `updated_at` |
 | Soft deletes | Para todas las tablas |
+| Columnas de estado booleano | `is_active` para desactivación lógica con visibilidad en gestión (registro inactivo visible para reactivación). No usar `fl_status` — está deprecado por ser redundante con `deleted_at`, será eliminado progresivamente |
 | Migraciones | Archivos versionados en `database/migrations/` |
 | Vistas BD | Prefijo `vw_` |
 | Funciones BD | Prefijo `fn_` |
