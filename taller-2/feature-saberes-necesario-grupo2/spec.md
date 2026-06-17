@@ -1,7 +1,7 @@
 # SPEC — Gestión de Saberes Necesarios por Tema de Curso
 
-**Versión:** 1.0  
-**Fecha:** 2025-06-16  
+**Versión:** 2.0  
+**Fecha:** 2025-06-17  
 **Roles involucrados:** Administrador, Didi  
 **Estado:** En revisión
 
@@ -9,7 +9,7 @@
 
 ## Resumen ejecutivo
 
-Se incorpora al módulo de Cursos la gestión completa de Saberes Necesarios (crear, editar, cambiar estado, eliminar), reemplazando la práctica actual de agregarlos dentro del solucionario de cada pregunta y eliminando la galería externa no controlada. Cada saber se identifica con un código único auto-generado `[cod_curso]-[cod_tema][correlativo]`, contiene una imagen SVG obligatoria y tiene nombre único dentro de su tema (hasta 150 caracteres). La imagen se previsualiza adaptándose a la resolución de pantalla del usuario. Preguntas abiertas: (1) ¿Quién define y mantiene el catálogo de temas disponibles? (2) ¿El correlativo se reinicia por tema o es global por curso?
+Se incorpora al módulo de Cursos la gestión completa de Saberes Necesarios (crear, editar, cambiar estado, eliminar), reemplazando la práctica actual de agregarlos dentro del solucionario de cada pregunta y eliminando la galería externa no controlada. Cada saber se identifica con un código único auto-generado `[cod_curso]-[cod_tema][correlativo]`, contiene una imagen SVG obligatoria y tiene nombre único dentro de su tema (hasta 150 caracteres). La imagen se previsualiza adaptándose a la resolución de pantalla del usuario.
 
 ---
 
@@ -19,25 +19,25 @@ Se incorpora al módulo de Cursos la gestión completa de Saberes Necesarios (cr
 Los docentes actualmente añaden Saberes Necesarios dentro del solucionario de cada pregunta, lo que genera duplicidad de contenido cuando el mismo saber aparece en múltiples preguntas. Como consecuencia, se comenzó a usar una galería externa a Odiseo que produce pérdida de trazabilidad, control de versiones y estandarización.
 
 **Por qué ahora / a quién impacta:**  
-La duplicidad activa encarece la creación de contenido (tiempo de carga, coherencia visual) y la galería externa ya existe como workaround, lo que significa que el problema está siendo absorbido por los usuarios. Impacta directamente a Administradores y usuarios Didi que crean y mantienen cursos.
+La duplicidad activa encarece la creación de contenido (tiempo de carga, coherencia visual) y la galería externa ya existe como workaround, lo que significa que el problema está siendo absorbido por los usuarios. Impacta directamente a Administradores y usuarios Didi.
 
 ---
 
 ## 2. User stories y criterios de aceptación
 
 ### US-1 (P1): Acceder a la sección de Saberes Necesarios
-Como Administrador o Didi, quiero ver la opción "Saberes Necesarios" dentro del módulo de Cursos, para gestionar los saberes sin salir del sistema.
+Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero ver la opción "Saberes Necesarios" dentro del módulo de Cursos, para gestionar los saberes sin salir del sistema.
 
-**AC-1.1** — Dado que el usuario tiene permisos de Administrador o Didi y accede al módulo de Cursos, cuando navega al menú lateral del módulo, entonces aparece la opción "Saberes Necesarios" visible y seleccionable.
+**AC-1.1** — Dado que el usuario tiene permiso de "Listar" sobre Saberes Necesarios y accede al módulo de Cursos, cuando navega al menú lateral del módulo, entonces aparece la opción "Saberes Necesarios" visible y seleccionable.
 
-**AC-1.2** — Dado que el usuario **no** tiene permisos de Administrador ni Didi, cuando intenta acceder a la ruta de Saberes Necesarios (directa o por menú), entonces el sistema bloquea el acceso y muestra el mensaje: _"No tiene permisos para acceder a esta funcionalidad."_
+**AC-1.2** — Dado que el usuario **no** tiene permiso de "Listar" sobre Saberes Necesarios, cuando intenta acceder a la ruta de Saberes Necesarios (directa o por menú), entonces el sistema bloquea el acceso y muestra el mensaje: _"No tiene permisos para acceder a esta funcionalidad."_
 
 ---
 
 ### US-2 (P1): Crear un saber necesario
-Como Administrador o Didi, quiero crear un saber necesario con imagen SVG, curso, tema y nombre, para centralizar el contenido reutilizable del curso.
+Como usuario con permiso de "Crear" sobre Saberes Necesarios, quiero crear un saber necesario con imagen SVG, curso, tema y nombre, para centralizar el contenido reutilizable del curso.
 
-**AC-2.1** — Dado que el usuario está en la lista de Saberes Necesarios, cuando hace clic en "Agregar saber necesario", entonces se abre un modal con los campos: imagen SVG (carga de archivo), Curso, Tema y Nombre.
+**AC-2.1** — Dado que el usuario está en la lista de Saberes Necesarios y tiene permiso de "Crear" sobre Saberes Necesarios, cuando hace clic en "Agregar saber necesario", entonces se abre un modal con los campos: imagen SVG (carga de archivo), Curso, Tema y Nombre.
 
 **AC-2.2** — Dado que el usuario completa todos los campos con datos válidos y hace clic en "Guardar", entonces el sistema registra el saber, genera un código con la estructura `[cod_curso]-[cod_tema][correlativo]` (ej. `03-100001`), y muestra el mensaje: _"Saber necesario creado correctamente. Código: {código generado}"_.
 
@@ -51,34 +51,38 @@ Como Administrador o Didi, quiero crear un saber necesario con imagen SVG, curso
 
 **AC-2.7** — Dado que el usuario ingresa un nombre de saber, cuando escribe más de 150 caracteres, entonces el campo no acepta más caracteres a partir del carácter 151 (truncamiento en input) **o** el sistema muestra un error de validación que impide guardar.
 
+**AC-2.8** — Dado que el usuario carga una imagen SVG que supera los 5 MB, cuando el sistema valida el tamaño del archivo, entonces bloquea la carga y muestra el mensaje: _"El archivo SVG supera el límite de 5 MB. Por favor, comprima la imagen o use un archivo de menor tamaño."_
+
 ---
 
 ### US-3 (P1): Visualizar el listado de saberes necesarios
-Como Administrador o Didi, quiero ver la lista de saberes con sus metadatos y aplicar filtros, para encontrar y gestionar rápidamente un saber específico.
+Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero ver la lista de saberes con sus metadatos y aplicar filtros, para encontrar y gestionar rápidamente un saber específico.
 
-**AC-3.1** — Dado que el usuario accede a la sección "Saberes Necesarios", cuando la pantalla carga, entonces se muestra una tabla paginada mostrando 10 registros por defecto, con las columnas: N.° (correlativo, incremental +1), Código, Curso `[código][nombre]`, Tema `[código][nombre]`, Nombre, Fecha Creación, Estado, Acciones (Ver, Editar y Eliminar). El filtro de Estado muestra por defecto "Activo".
+**AC-3.1** — Dado que el usuario accede a la sección "Saberes Necesarios" y tiene permiso de "Listar" sobre Saberes Necesarios, cuando la pantalla carga, entonces se muestra una tabla paginada mostrando 10 registros por defecto, con las columnas: N.° (correlativo, incremental +1), Código, Curso `[código][nombre]`, Tema `[código][nombre]`, Nombre, Fecha Creación, Estado, Acciones (Ver, Editar y Eliminar). El filtro de Estado muestra por defecto "Activo". El ordenamiento por defecto es por "Fecha Creación" del más reciente al más antiguo.
 
-**AC-3.2** — Dado que el usuario aplica un filtro por texto (código o nombre), cuando escribe al menos 1 carácter en el buscador, entonces la tabla muestra solo los saberes cuyo código o nombre contiene ese texto (búsqueda no sensible a mayúsculas).
+**AC-3.2** — Dado que el usuario puede filtrar por código o nombre, cuando escribe al menos 1 carácter en el buscador, entonces la tabla muestra solo los saberes cuyo código o nombre contiene ese texto (búsqueda no sensible a mayúsculas). Si el usuario borra el texto del buscador, entonces la tabla muestra todos los saberes disponibles aplicando el filtro de Estado y el ordenamiento por defecto.
 
-**AC-3.3** — Dado que el usuario filtra por Curso, cuando selecciona un curso de la lista (restringida a los cursos asignados al usuario), entonces la tabla muestra únicamente los saberes pertenecientes a ese curso.
+**AC-3.3** — Dado que el usuario puede filtrar por Curso, cuando selecciona un curso de la lista (restringida a los cursos asignados al usuario), entonces la tabla muestra únicamente los saberes pertenecientes a ese curso. Si el usuario selecciona "Todos" o borra el filtro, entonces la tabla muestra los saberes de todos los cursos disponibles aplicando el filtro de Estado y el ordenamiento por defecto.
 
-**AC-3.4** — Dado que el usuario filtra por Estado, cuando selecciona "Inactivo", entonces la tabla muestra solo los saberes con ese estado.
+**AC-3.4** — Dado que el usuario puede filtrar por Estado, cuando selecciona "Inactivo", entonces la tabla muestra solo los saberes con ese estado. Si el usuario selecciona "Todos" o borra el filtro de Estado, entonces se aplica el filtro por defecto que muestra los saberes "Activo" ordenados por Fecha Creación del más reciente al más antiguo.
+
+**AC-3.5** — Dado que el usuario borra todos los filtros aplicados (o hace clic en "Limpiarese filtro"/"Ver todos"), cuando el sistema limpia los filtros, entonces la tabla muestra todos los saberes con el filtro por defecto de Estado "Activo" y el ordenamiento por defecto por "Fecha Creación" del más reciente al más antiguo. El ordenamiento por defecto permanece siempre activo incluso cuando no hay filtros aplicados.
 
 ---
 
 ### US-4 (P1): Ver la imagen de un saber necesario
-Como Administrador o Didi, quiero visualizar la imagen SVG de un saber en pantalla completa adaptada a mi resolución, para revisar su contenido sin distorsión.
+Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero visualizar la imagen SVG de un saber en pantalla completa adaptada a mi resolución, para revisar su contenido sin distorsión.
 
-**AC-4.1** — Dado que el usuario hace clic en la acción "Ver" de un saber, cuando el modal de visualización abre, entonces la imagen SVG se renderiza escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, independientemente de la resolución de pantalla del usuario (responsive dentro del modal).
+**AC-4.1** — Dado que el usuario hace clic en la acción "Ver" de un saber y tiene permiso de "Listar" sobre Saberes Necesarios, cuando el modal abre, entonces la imagen SVG se renderiza escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, independientemente de la resolución de pantalla del usuario (responsive dentro del modal).
 
 **AC-4.2** — Dado que la imagen SVG no se puede cargar, cuando el modal intenta renderizarla, entonces muestra el mensaje: _"No se pudo visualizar la imagen del saber necesario."_
 
 ---
 
 ### US-5 (P1): Editar un saber necesario
-Como Administrador o Didi, quiero editar el tema, nombre e imagen SVG de un saber existente, para corregir errores o actualizarlo sin eliminarlo.
+Como usuario con permiso de "Actualizar" sobre Saberes Necesarios, quiero editar el tema, nombre e imagen SVG de un saber existente, para corregir errores o actualizarlo sin eliminarlo.
 
-**AC-5.1** — Dado que el usuario hace clic en "Editar" sobre un saber, cuando el modal de edición abre, entonces los campos Tema, Nombre e Imagen SVG son editables; los demás datos son de solo lectura.
+**AC-5.1** — Dado que el usuario hace clic en "Editar" sobre un saber y tiene permiso de "Actualizar" sobre Saberes Necesarios, cuando el modal de edición abre, entonces los campos Tema, Nombre e Imagen SVG son editables; los demás datos son de solo lectura.
 
 **AC-5.2** — Dado que el usuario cambia el Tema del saber y guarda, cuando el sistema procesa el cambio, entonces el código del saber se actualiza usando el código del nuevo tema y el correlativo correspondiente, y el código anterior queda reemplazado.
 
@@ -91,27 +95,28 @@ Como Administrador o Didi, quiero editar el tema, nombre e imagen SVG de un sabe
 ---
 
 ### US-6 (P2): Cambiar el estado de un saber necesario
-Como Administrador o Didi, quiero activar o inactivar un saber, para controlar su disponibilidad sin eliminarlo.
+Como usuario con permiso de "Actualizar estado" sobre Saberes Necesarios, quiero activar o inactivar un saber, para controlar su disponibilidad sin eliminarlo.
 
-**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Activo" e "Inactivo" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
+**AC-6.1** — Dado que el usuario hace clic en la acción de cambio de estado y tiene permiso de "Actualizar estado" sobre Saberes Necesarios, cuando confirma la acción en el modal, entonces el estado del saber cambia entre "Activo" e "Inactivo" y se muestra el mensaje: _"El estado del saber necesario ha sido actualizado."_
 
 ---
 
 ### US-7 (P1): Eliminar un saber necesario
-Como Administrador o Didi, quiero eliminar un saber que no esté en uso, para depurar el catálogo sin afectar el contenido activo.
+Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar un saber que no esté en uso, para depurar el catálogo sin afectar el contenido activo.
 
-**AC-7.1** — Dado que el usuario intenta eliminar un saber, cuando confirma la eliminación, entonces el saber se elimina de la base de datos y desaparece del listado.
+**AC-7.1** — Dado que el usuario intenta eliminar un saber y tiene permiso de "Eliminar" sobre Saberes Necesarios, cuando confirma la eliminación, entonces el saber se elimina de la base de datos y desaparece del listado.
 
 ---
 
 ## 3. Requisitos no funcionales (NFR)
 
 - **NFR-1 — Rendimiento:** La carga inicial del listado de Saberes Necesarios debe completarse en menos de 2 segundos.
-- **NFR-2 — Formato de imagen:** Solo se aceptan archivos `.svg`. El sistema debe validar el tipo MIME (`image/svg+xml`) y la extensión en el lado servidor, no solo en el cliente.
+- **NFR-2 — Formato de imagen:** Solo se aceptan archivos `.svg`. El sistema must validate MIME type (`image/svg+xml`) y la extensión en el lado servidor, no solo en el cliente.
 - **NFR-3 — Unicidad del código:** El código generado `[cod_curso]-[cod_tema][correlativo]` debe ser único en la base de datos; la generación debe ser atómica para evitar colisiones en inserciones concurrentes.
 - **NFR-4 — Longitud de nombre:** El campo Nombre del saber acepta un máximo de 150 caracteres. La validación debe ejecutarse tanto en el front-end (contador visible) como en el back-end.
 - **NFR-5 — Control de acceso:** El acceso a la sección y todas sus operaciones deben verificarse por rol en el back-end; la validación solo en el front-end no es suficiente.
 - **NFR-6 — Trazabilidad:** Cada creación, edición, cambio de estado y eliminación debe quedar registrada en el log de auditoría del sistema con usuario, timestamp y acción realizada.
+- **NFR-7 — Sanitización de SVG:** El sistema debe contar con un pipeline de sanitización para archivos SVG, eliminando elementos potencialmente maliciosos como `<script>`, `<foreignObject>`, event handlers y otros vectores de ataque, antes de habilitar la carga en producción.
 
 ---
 
@@ -130,22 +135,16 @@ Como Administrador o Didi, quiero eliminar un saber que no esté en uso, para de
 ## 5. Assumptions
 
 - Asumimos que la lista de Cursos y Temas ya existe y es mantenida por otro módulo del sistema; si es falso, se requiere incorporar la gestión de temas en este mismo alcance.
-- Asumimos que el correlativo del código es numérico, secuencial y con formato de 4 dígitos con ceros a la izquierda (ej. `0001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
+- Asumimos que el correlativo del código es numérico, global por curso, secuencial y con formato de 4 dígitos con ceros a la izquierda (ej. `0001`); si es falso, el formato del código puede diferir de los ejemplos documentados.
 - Asumimos que "Didi" es un rol con los mismos permisos operativos que "Administrador" dentro de esta funcionalidad; si es falso, se deben especificar las restricciones diferenciales del rol Didi.
 - Asumimos que los Cursos disponibles en el filtro están restringidos a los asignados al usuario autenticado; si es falso, usuarios con acceso amplio verán cursos que no les corresponden.
 - Asumimos que la previsualización SVG se renderiza directamente en el navegador sin conversión intermedia a raster; si es falso, se requiere un servicio de conversión o sanitización adicional.
+- Asumimos que el módulo de usuarios, roles y permisos ya existe; si es falso, se requiere incorporar la gestión de usuarios, roles y permisos en este alcance.
+- Asumimos que el catálogo de temas disponibles es definido y mantenido por su propio módulo independiente; si es falso, se requiere incorporar la gestión del catálogo de temas en este alcance.
 
 ---
 
-## 6. Aclaraciones (máx 3)
-
-1. **Tamaño máximo del archivo SVG:** ¿Existe un límite de peso (en KB o MB) para los archivos SVG que se pueden cargar? Sin este límite definido no es posible implementar la validación de tamaño en front y back-end.
-
-2. **Sanitización de SVG:** ¿El equipo de seguridad ya tiene un pipeline de sanitización para SVGs (eliminación de `<script>`, `<foreignObject>`, event handlers)? Si no, esto debe ser un NFR adicional antes de habilitar la carga de SVG en producción.
-
----
-
-## 7. Scope
+## 6. Scope
 
 **DENTRO:**
 - Nueva sección "Saberes Necesarios" dentro del módulo de Cursos.
