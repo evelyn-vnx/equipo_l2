@@ -1,4 +1,4 @@
-## Resumen ejecutivo (≤150 palabras) ← §16.2
+## Resumen ejecutivo
 
 Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal DDD en `src/` (backend) y feature module en frontend. Cada saber tiene código auto-generado `[cod_curso]-[cod_tema][correlativo]` (4 dígitos), nombre único por tema-curso (≤150 chars), imagen SVG obligatoria en Google Cloud Storage, y soporta eliminación lógica con estado activo/inactivo. El plan cubre BD (tablas + funciones + permisos), backend (Domain → Application → Infrastructure), frontend (módulo, páginas, diálogos, navegación) y tests (unitarios + integración). Dudas abiertas: (1) límite de peso máximo para SVG, (2) pipeline de sanitización de SVG, (3) quién mantiene el catálogo de temas.
 
@@ -19,7 +19,7 @@ Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal
 **Funciones de BD a crear:**
 - `database/migrations/functions/fn_create_essential_knowledge/` — `fn_create_essential_knowledge(p_code, p_name, p_course_id, p_topic_id, p_svg_filename, p_created_by)` → inserta y retorna el registro.
 - `database/migrations/functions/fn_update_essential_knowledge/` — `fn_update_essential_knowledge(p_id, p_name, p_topic_id, p_svg_filename, p_updated_by)` → actualiza y retorna el registro. Si cambia topic_id, recibe nuevo p_code.
-- `database/migrations/functions/fn_list_essential_knowledge/` — `fn_list_essential_knowledge(p_search, p_course_id, p_topic_id, p_status, p_page, p_per_page)` → retorna paginado con total.
+- `database/migrations/functions/fn_list_essential_knowledge/` — `fn_list_essential_knowledge(p_search DEFAULT NULL, p_course_id DEFAULT NULL, p_topic_id DEFAULT NULL, p_status DEFAULT NULL, p_page DEFAULT 1, p_per_page DEFAULT 10)` → retorna paginado con total. Todos los filtros son opcionales.
 - `database/migrations/functions/fn_get_essential_knowledge_by_id/` — `fn_get_essential_knowledge_by_id(p_id)` → retorna registro completo incluyendo curso y tema.
 
 ### Backend — `odiseo-backend/src/App/Modules/V2/Catalog/EssentialKnowledge/`
@@ -44,7 +44,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - `Application/Dtos/Requests/UpdateIsActiveEssentialKnowledgeRequestDto.php` — datos cambio estado
 - `Application/Dtos/Requests/DeleteEssentialKnowledgeRequestDto.php` — id del saber
 - `Application/Dtos/Requests/GetByIdEssentialKnowledgeRequestDto.php` — id del saber
-- `Application/Dtos/Requests/FilterEssentialKnowledgeRequestDto.php` — parámetros de filtro (search, course_id, topic_id, status, page, per_page)
+- `Application/Dtos/Requests/FilterEssentialKnowledgeRequestDto.php` — parámetros de filtro opcionales (search, course_id, topic_id, status, page, per_page)
 - `Application/Dtos/Requests/UploadSvgEssentialKnowledgeRequestDto.php` — datos para subida SVG
 - `Application/UseCases/StoreEssentialKnowledgeUseCase.php` — genera código, valida unicidad, persiste (constitution §2.3, §2.7)
 - `Application/UseCases/UpdateEssentialKnowledgeUseCase.php` — si cambia topic_id, regenera código, valida unicidad
@@ -76,7 +76,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 ### Frontend — `odiseo-frontend/`
 
 **Nuevo módulo `src/modules/essential-knowledge/`:**
-- `pages/EssentialKnowledge.page.vue` — página principal con tabla paginada (10 registros), columnas: N.°, Código, Curso [código][nombre], Tema [código][nombre], Nombre, Fecha Creación, Estado, Acciones (Ver/Editar/Eliminar). Filtros: búsqueda texto (código/nombre), curso (autocomplete restringido por usuario), tema, estado (defecto: Activo). Botón "Agregar saber necesario".
+- `pages/EssentialKnowledge.page.vue` — página principal con tabla paginada (10 registros), columnas: N.°, Código, Curso [código][nombre], Tema [código][nombre], Nombre, Fecha Creación, Estado, Acciones (Ver/Editar/Eliminar). Filtros opcionales: búsqueda texto (código/nombre), curso (autocomplete restringido por usuario), tema, estado (defecto: Activo). Botón "Agregar saber necesario".
 - `dialogs/EssentialKnowledge.dialog.vue` — modal crear/editar con campos: Curso (select), Tema (dependiente del curso), Nombre (textarea con contador 150 chars), carga SVG (input file + preview). Botón Guardar deshabilitado si faltan campos obligatorios. Confirmación al cancelar si hay datos (AC-2.5).
 - `dialogs/EssentialKnowledgeShow.dialog.vue` — modal ver imagen SVG responsive, metadatos del saber. Manejo de error "No se pudo visualizar la imagen del saber necesario" (AC-4.2).
 - `dialogs/EssentialKnowledgeChangeState.dialog.vue` — confirmación cambio estado. Mensaje: "El estado del saber necesario ha sido actualizado."
@@ -147,7 +147,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 
 - **US-1 (Acceder a sección Saberes Necesarios)** → Navegación lateral (`src/navigation/vertical/odiseo/`) con entrada "Saberes Necesarios" protegida por CASL (`subject: 'essential-knowledge'`, `action: 'listar'`). Ruta de página (`src/pages/odiseo/cursos/essential-knowledge/index.vue`). Backend: ruta `GET api/v2/catalog/essential-knowledge` con middleware `permission:essential_knowledge.listar`.
 - **US-2 (Crear un saber necesario)** → `EssentialKnowledge.dialog.vue` (modal creación), `StoreEssentialKnowledgeUseCase` (generación código + validación unicidad), `StoreEssentialKnowledgeRequestValidator` (validación SVG obligatorio, nombre ≤150 chars, curso-tema existentes), `UploadSvgEssentialKnowledgeUseCase` (subida SVG a GCS y sanitización).
-- **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros con columnas del spec AC-3.1), `FilterEssentialKnowledgeUseCase` (filtros código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
+- **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros con columnas del spec AC-3.1), `FilterEssentialKnowledgeUseCase` (filtros opcionales: código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
 - **US-4 (Ver imagen SVG del saber)** → `EssentialKnowledgeShow.dialog.vue` (imagen SVG responsive, meta-datos, manejo de error AC-4.2), `GetByIdEssentialKnowledgeUseCase` (retorna URL firmada de GCS), `GetByIdEssentialKnowledgeResponse`.
 - **US-5 (Editar un saber necesario)** → `EssentialKnowledge.dialog.vue` (modo edición, campos editables: tema, nombre, imagen), `UpdateEssentialKnowledgeUseCase` (regenera código si cambia tema, valida unicidad), `UpdateEssentialKnowledgeRequestValidator`.
 - **US-6 (Cambiar estado activo/inactivo)** → `EssentialKnowledgeChangeState.dialog.vue` (confirmación), `UpdateIsActiveEssentialKnowledgeUseCase`, `UpdateIsActiveEssentialKnowledgeValidator`, `fn_update_essential_knowledge` (BD actualiza is_active).
