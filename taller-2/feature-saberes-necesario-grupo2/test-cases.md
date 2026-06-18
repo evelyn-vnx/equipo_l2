@@ -62,3 +62,23 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Nombre: texto de exactamente 150 caracteres.
 **Pasos:** Escribir un nombre de exactamente 150 caracteres en el campo. Hacer clic en "Guardar".
 **Esperado:** El sistema acepta y guarda el saber correctamente con el nombre completo de 150 caracteres.
+
+### TC-13 (de AC-2.7, caso borde): Nombre superior a 150 caracteres
+**Datos:** Nombre: texto de 151 caracteres.
+**Pasos:** Intentar escribir o pegar un nombre de 151 caracteres en el campo.
+**Esperado:** El campo no acepta más de 150 caracteres (el input trunca en el carácter 150) o el sistema muestra un mensaje de validación: "El nombre no puede exceder los 150 caracteres." y bloquea el guardado.
+
+### TC-14 (de AC-3.1, caso feliz): Visualización de la tabla con todas las columnas
+**Datos:** Usuario accede a la sección Saberes Necesarios con al menos 10 saberes registrados.
+**Pasos:** Navegar a la sección Saberes Necesarios.
+**Esperado:** La pantalla carga mostrando una tabla paginada con 10 registros por defecto, con las siguientes columnas: N.° (correlativo 1, 2, 3...), Código (ej. 03-100001), Curso (ej. [03] Álgebra), Tema (ej. [10] Fracciones), Nombre (ej. "Fracciones propias"), Fecha Creación (ej. 16/06/2025), Estado ("Activo" o "Inactivo"), Acciones (iconos: Ver, Editar y Eliminar).
+
+### TC-15 (de AC-3.2, caso feliz): Búsqueda por código
+**Datos:** Listado con saberes que incluye uno con código 03-100001.
+**Pasos:** Escribir 03-100001 en el campo de búsqueda.
+**Esperado:** La tabla muestra únicamente el saber con código 03-100001.
+
+### TC-16 (de AC-3.2, caso feliz): Búsqueda por nombre parcial
+**Datos:** Listado con saberes que incluye "Fracciones propias" y "Fracciones impropias".
+**Pasos:** Escribir fracciones en el campo de búsqueda.
+**Esperado:** La tabla muestra ambos saberes: "Fracciones propias" y "Fracciones impropias" (búsqueda no sensible a mayúsculas).
