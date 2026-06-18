@@ -29,7 +29,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
 ### TC-6 (de AC-2.3, caso de error): Botón Guardar deshabilitado por falta de imagen
-**Datos:** Modal abierto. Curso: Matemática. Tema: Álgebra. Nombre: "Fracciones propias". Imagen: no cargada.
+**Datos:** Modal abierto. Curso: Álgebra. Tema: Fracciomes. Nombre: "Fracciones propias". Imagen: no cargada.
 **Pasos:** Completar Curso, Tema y Nombre. No cargar ninguna imagen. Intentar hacer clic en "Guardar".
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
@@ -82,3 +82,28 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Listado con saberes que incluye "Fracciones propias" y "Fracciones impropias".
 **Pasos:** Escribir fracciones en el campo de búsqueda.
 **Esperado:** La tabla muestra ambos saberes: "Fracciones propias" y "Fracciones impropias" (búsqueda no sensible a mayúsculas).
+
+### TC-17 (de AC-3.2, caso borde): Búsqueda con un solo carácter
+**Datos:** Listado con varios saberes.
+**Pasos:** Escribir a en el campo de búsqueda.
+**Esperado:** La tabla muestra todos los saberes cuyo código o nombre contenga la letra "a" (en cualquier posición).
+
+### TC-18 (de AC-3.3, caso feliz): Filtro por curso asignado al usuario
+**Datos:** Usuario con cursos Álgebra (03) y Lengua (05) asignados.
+**Pasos:** Abrir el filtro de Curso. Seleccionar "Álgebra (03)".
+**Esperado:** La lista desplegable muestra solo los cursos Álgebra (03) y Lengua (05). Al seleccionar Álgebra, la tabla muestra únicamente los saberes pertenecientes al curso Álgebra.
+
+### TC-19 (de AC-3.4, caso feliz): Filtro por estado Inactivo
+**Datos:** Listado con saberes en estado "Activo" e "Inactivo".
+**Pasos:** Abrir el filtro de Estado (que muestra "Activo" por defecto). Seleccionar "Inactivo".
+**Esperado:** La tabla muestra únicamente los saberes con estado "Inactivo".
+
+### TC-20 (de AC-4.1, caso feliz): Visualización de imagen SVG en modal
+**Datos:** Saber existente con imagen SVG válida.
+**Pasos:** Localizar un saber en el listado. Hacer clic en el ícono de "Ver".
+**Esperado:** Se abre un modal que muestra la imagen SVG renderizada, escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, adaptándose a la resolución de pantalla del usuario.
+
+### TC-21 (de AC-4.2, caso de error): Error al visualizar imagen SVG
+**Datos:** Saber existente con imagen SVG corrupta o no accesible.
+**Pasos:** Hacer clic en "Ver" sobre el saber con la imagen dañada.
+**Esperado:** El sistema muestra el mensaje: "No se pudo visualizar la imagen del saber necesario."
