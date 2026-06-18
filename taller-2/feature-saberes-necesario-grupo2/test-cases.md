@@ -29,7 +29,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
 ### TC-6 (de AC-2.3, caso de error): Botón Guardar deshabilitado por falta de imagen
-**Datos:** Modal abierto. Curso: Matemática. Tema: Álgebra. Nombre: "Fracciones propias". Imagen: no cargada.
+**Datos:** Modal abierto. Curso: Álgebra. Tema: Fracciomes. Nombre: "Fracciones propias". Imagen: no cargada.
 **Pasos:** Completar Curso, Tema y Nombre. No cargar ninguna imagen. Intentar hacer clic en "Guardar".
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
@@ -82,3 +82,93 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Listado con saberes que incluye "Fracciones propias" y "Fracciones impropias".
 **Pasos:** Escribir fracciones en el campo de búsqueda.
 **Esperado:** La tabla muestra ambos saberes: "Fracciones propias" y "Fracciones impropias" (búsqueda no sensible a mayúsculas).
+
+### TC-17 (de AC-3.2, caso borde): Búsqueda con un solo carácter
+**Datos:** Listado con varios saberes.
+**Pasos:** Escribir a en el campo de búsqueda.
+**Esperado:** La tabla muestra todos los saberes cuyo código o nombre contenga la letra "a" (en cualquier posición).
+
+### TC-18 (de AC-3.3, caso feliz): Filtro por curso asignado al usuario
+**Datos:** Usuario con cursos Álgebra (03) y Lengua (05) asignados.
+**Pasos:** Abrir el filtro de Curso. Seleccionar "Álgebra (03)".
+**Esperado:** La lista desplegable muestra solo los cursos Álgebra (03) y Lengua (05). Al seleccionar Álgebra, la tabla muestra únicamente los saberes pertenecientes al curso Álgebra.
+
+### TC-19 (de AC-3.4, caso feliz): Filtro por estado Inactivo
+**Datos:** Listado con saberes en estado "Activo" e "Inactivo".
+**Pasos:** Abrir el filtro de Estado (que muestra "Activo" por defecto). Seleccionar "Inactivo".
+**Esperado:** La tabla muestra únicamente los saberes con estado "Inactivo".
+
+### TC-20 (de AC-4.1, caso feliz): Visualización de imagen SVG en modal
+**Datos:** Saber existente con imagen SVG válida.
+**Pasos:** Localizar un saber en el listado. Hacer clic en el ícono de "Ver".
+**Esperado:** Se abre un modal que muestra la imagen SVG renderizada, escalada para ocupar el ancho y alto disponibles del modal sin desbordarse, adaptándose a la resolución de pantalla del usuario.
+
+### TC-21 (de AC-4.2, caso de error): Error al visualizar imagen SVG
+**Datos:** Saber existente con imagen SVG corrupta o no accesible.
+**Pasos:** Hacer clic en "Ver" sobre el saber con la imagen dañada.
+**Esperado:** El sistema muestra el mensaje: "No se pudo visualizar la imagen del saber necesario."
+
+### TC-22 (de AC-5.1, caso feliz): Apertura del modal de edición
+**Datos:** Saber existente en el listado.
+**Pasos:** Localizar un saber en el listado. Hacer clic en el ícono de "Editar".
+**Esperado:** Se abre un modal de edición mostrando: Campo Curso (solo lectura, no editable), Campo Tema (editable, lista desplegable), Campo Nombre (editable), Imagen SVG actual previsualizada con opción para reemplazar, Botones "Guardar" y "Cancelar".
+
+### TC-23 (de AC-5.2, caso feliz): Actualización automática de código al cambiar tema
+**Datos:** Saber existente: código 03-100001, tema Fracciones (cod_tema: 10). Cambio a tema Exponentes (cod_tema: 15).
+**Pasos:** Editar el saber y cambiar el tema de "Fracciones" a "Exponentes". Hacer clic en "Guardar".
+**Esperado:** El sistema actualiza el código del saber a 03-150001 (manteniendo el mismo correlativo) y el código anterior queda reemplazado. El mensaje de confirmación muestra el nuevo código actualizado.
+
+### TC-24 (de AC-5.3, caso feliz): Confirmación de edición exitosa
+**Datos:** Saber existente, cambios válidos realizados (tema, nombre o imagen).
+**Pasos:** Realizar cambios válidos en el modal de edición. Hacer clic en "Guardar".
+**Esperado:** El sistema actualiza el registro y muestra el mensaje: "Saber necesario actualizado correctamente."
+
+### TC-25 (de AC-5.4, caso de error): Eliminación de imagen sin reemplazo en edición
+**Datos:** Saber existente en modo edición con imagen actual cargada.
+**Pasos:** Eliminar la imagen actual (sin cargar una nueva). Hacer clic en "Guardar".
+**Esperado:** El sistema bloquea la acción y muestra el mensaje: "Debe mantener o cargar una imagen válida en formato SVG."
+
+### TC-26 (de AC-5.5, caso de error): Nombre duplicado en edición dentro del mismo tema
+**Datos:** Saber editado: "Fracciones propias" (tema Fracciones). Otro saber existente en el mismo tema con nombre "Fracciones propias".
+**Pasos:** Editar el nombre y cambiarlo a "Fracciones propias" (coincidiendo con otro saber existente en el tema). Hacer clic en "Guardar".
+**Esperado:** El sistema bloquea la acción y muestra un mensaje de error: "El nombre ya existe en este tema. Por favor, elige otro nombre."
+
+### TC-27 (de AC-6.1, caso feliz): Cambio de estado Activo a Inactivo
+**Datos:** Saber existente con estado "Activo".
+**Pasos:** Hacer clic en el botón de cambio de estado del saber. Confirmar la acción en el modal.
+**Esperado:** El estado cambia de "Activo" a "Inactivo". Se muestra el mensaje: "El estado del saber necesario ha sido actualizado." y en la tabla refleja el nuevo estado.
+
+### TC-28 (de AC-7.1, caso feliz): Eliminación de saber no utilizado
+**Datos:** Saber existente que no está asociado a ninguna pregunta.
+**Pasos:** Hacer clic en el ícono de "Eliminar" sobre el saber. Confirmar la eliminación en el modal de confirmación.
+**Esperado:** El saber se elimina de la base de datos y desaparece del listado.
+
+### TC-29 (caso borde): Correlativo de código al llegar a 9999
+**Datos:** Intento de crear un nuevo saber cuando el correlativo actual del tema ya está en 9999.
+**Pasos:** Intentar crear un nuevo saber en un tema cuyo correlativo ha alcanzado 9999. Hacer clic en "Guardar".
+**Esperado:** El sistema no permite el registro y muestra el mensaje: "No se pudo guardar el saber." (el límite de correlativos ha sido alcanzado).
+
+### TC-30 (caso borde): SVG malicioso con scripts embebidos
+**Datos:** Archivo SVG que contiene código `<script>` embebido.
+**Pasos:** Intentar cargar un SVG con scripts maliciosos.
+**Esperado:** El sistema sanitiza el SVG eliminando contenido peligroso o rechaza el archivo y muestra un mensaje indicando que el SVG contiene elementos no permitidos. El sistema no ejecuta scripts.
+
+### TC-31 (caso borde): Imagen SVG de gran tamaño (> 5 MB)
+**Datos:** Archivo SVG de 6 MB.
+**Pasos:** Intentar cargar un SVG superior al límite definido.
+**Esperado:** El sistema bloquea la carga y muestra el mensaje: "El archivo excede el tamaño máximo permitido de 5 MB."
+
+### TC-32 (caso feliz): Filtro de Cursos restringido al usuario
+**Datos:** Usuario con 2 cursos asignados.
+**Pasos:** Abrir el filtro de Cursos en el listado.
+**Esperado:** El filtro muestra solo los 2 cursos asignados al usuario autenticado. El usuario no puede ver ni seleccionar cursos que no le pertenecen.
+
+### TC-33 (caso feliz): Filtro de Temas dinámico por curso seleccionado
+**Datos:** Curso Álgebra con temas: Fracciones, Exponentes, Logaritmos. Curso Lengua con temas: Gramática, Redacción.
+**Pasos:** Seleccionar "Álgebra" en el filtro de Cursos.
+**Esperado:** El filtro de Temas muestra solo: Fracciones, Exponentes, Logaritmos. Los temas de Lengua no aparecen.
+
+### TC-34 (caso feliz): Estado filtro por defecto "Activo"
+**Datos:** Usuario accede a la sección Saberes Necesarios.
+**Pasos:** Ingresar a la sección.
+**Esperado:** El filtro de Estado muestra por defecto "Activo" y la tabla carga mostrando solo los saberes con estado "Activo".
