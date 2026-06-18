@@ -137,8 +137,8 @@ Test Design
 
 ## Evidencias y trazabilidad
 
-- Commit inicial (v0): [PENDIENTE — colocar SHA]
-- Refinamientos realizados: ver historial de commits y notas de reunión (si aplica) [POR COMPLETAR]
+- Commit inicial (v0): c8868d30230ebc7f3c829016e0fea6c0b4d3237c
+- Refinamientos realizados: ver historial de commits.
 - Ajustes posteriores al gate de claridad: [PENDIENTE]
 - Ajustes posteriores al gate de consistencia: [PENDIENTE]
 
