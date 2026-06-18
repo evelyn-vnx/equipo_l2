@@ -1,12 +1,12 @@
 ## Resumen ejecutivo
 
-Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal DDD en `src/` (backend) y feature module en frontend. Cada saber tiene código auto-generado `[cod_curso]-[cod_tema][correlativo]` (4 dígitos), nombre único por tema-curso (≤150 chars), imagen SVG obligatoria en Google Cloud Storage, y soporta eliminación lógica con estado activo/inactivo. El plan cubre BD (tablas + funciones + permisos), backend (Domain → Application → Infrastructure), frontend (módulo, páginas, diálogos, navegación) y tests (unitarios + integración). Dudas abiertas: (1) límite de peso máximo para SVG, (2) pipeline de sanitización de SVG, (3) quién mantiene el catálogo de temas.
+Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal DDD en `src/` (backend) y feature module en frontend. Cada saber tiene código auto-generado `[cod_curso]-[cod_tema][correlativo]` (4 dígitos), nombre único por tema-curso (≤150 chars), imagen SVG obligatoria en Google Cloud Storage, y soporta eliminación lógica con estado activo/inactivo. El plan cubre BD (tablas + funciones + permisos), backend (Domain → Application → Infrastructure), frontend (módulo, páginas, diálogos, navegación) y tests (unitarios + integración).
 
 ## 1. Enfoque técnico (alto nivel)
 
-- **Base de datos**: Crear tabla `essential_knowledges` con `id` bigint auto-increment, campos `code`, `name` (varchar 150), `course_id` (FK), `topic_id` (FK), `svg_filename` (GCS), `is_active` (boolean), `created_by`, `deleted_at`. Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL`. Crear funciones de BD `fn_create_essential_knowledge`, `fn_update_essential_knowledge`, `fn_list_essential_knowledge`, `fn_get_essential_knowledge_by_id`. Migración de permisos (`essential_knowledge.listar`, `.crear`, `.actualizar`, `.eliminar`).
-- **Backend**: Módulo DDD completo en `src/App/Modules/V2/Catalog/EssentialKnowledge/` siguiendo la misma estructura del módulo `Area` (constitution §2). Capas: Domain (entidades, repositorios CQS), Application (use cases, DTOs inmutables), Infrastructure (controller, mappers, validators, routes, query builders, providers). Flujo: `Validator → Mapper → Controller → UseCase → Repository`. SVG se sube a GCS mediante `FileStorageInterface` (path `/essential-knowledge/{uuid}.svg`), en BD solo el filename. Código generado en `StoreEssentialKnowledgeUseCase` consultando último correlativo por (course_id, topic_id). Toda operación protegida con middleware `permission:essential_knowledge.*` (constitution §2.10, §5). Use case `TransactionalUseCase` para operaciones atómicas (constitution §2.7).
-- **Frontend**: Feature module en `src/modules/essential-knowledge/` con página de listado paginado (10 registros), filtros por código/nombre/curso/tema/estado. Diálogos: creación, edición, visualización SVG (responsive), cambio de estado, eliminación. Validación client-side de SVG (MIME `image/svg+xml`, tamaño). Navegación lateral en módulo Cursos, protegida por CASL (constitution §2.10). Comunicación vía Axios con servicio dedicado.
+- **Base de datos**: Crear tabla `essential_knowledges` con `id` bigint auto-increment, campos `code`, `name` (varchar 150), `course_id` (FK), `topic_id` (FK), `svg_filename` (GCS), `is_active` (boolean), `created_by`, `deleted_at`. Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL`. Crear funciones de BD `fn_create_essential_knowledge`, `fn_update_essential_knowledge`, `fn_list_essential_knowledge`, `fn_get_essential_knowledge_by_id`. Migración de permisos (`essential_knowledge.listar`, `.crear`, `.actualizar`, `.actualizar_estado`, `.eliminar`).
+- **Backend**: Módulo DDD completo en `src/App/Modules/V2/Catalog/EssentialKnowledge/` siguiendo la misma estructura del módulo `Area` (constitution §2). Capas: Domain (entidades, repositorios CQS), Application (use cases, DTOs inmutables), Infrastructure (controller, mappers, validators, routes, query builders, providers). Flujo: `Validator → Mapper → Controller → UseCase → Repository`. SVG se sube a GCS mediante `FileStorageInterface` (path `/essential-knowledge/{uuid}.svg`), en BD solo el filename. Código generado en `StoreEssentialKnowledgeUseCase` consultando último correlativo por (course_id, topic_id). Toda operación protegida con middleware `auth:sanctum` y permiso específico según la acción (constitution §2.10, §5). Use case `TransactionalUseCase` para operaciones atómicas (constitution §2.7).
+- **Frontend**: Feature module en `src/modules/essential-knowledge/` con página de listado paginado (10 registros), filtros por código/nombre/curso/tema/estado. Diálogos: creación, edición, visualización SVG (responsive), cambio de estado, eliminación. Validación client-side de SVG (MIME `image/svg+xml`, tamaño ≤5 MB). Navegación lateral en módulo Cursos, protegida por CASL (constitution §2.10). Comunicación vía Axios con servicio dedicado.
 
 ## 2. Componentes / archivos afectados
 
@@ -14,7 +14,7 @@ Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal
 
 **Migraciones de tabla a crear:**
 - `database/migrations/tables/table_essential_knowledges/2026_XX_XX_XXXXXX_create_table_essential_knowledges.php` — tabla principal con campos: `id` (bigint, auto-increment), `code` (varchar 20 unique), `name` (varchar 150), `course_id` (FK → courses), `topic_id` (FK → topics), `svg_filename` (varchar 255 nullable), `is_active` (boolean default true), `created_by` (FK → users), `created_at`, `updated_at`, `deleted_at`. Partial unique index `idx_unique_active_course_topic_name` on `(course_id, topic_id, name)` WHERE `deleted_at IS NULL`.
-- `database/migrations/tables/table_role_permissions/2026_XX_XX_XXXXXX_add_permissions_essential_knowledges.php` — insertar permisos: `essential_knowledge.listar`, `essential_knowledge.crear`, `essential_knowledge.actualizar`, `essential_knowledge.eliminar`. Asignar a roles Admin y Didi.
+- `database/migrations/tables/table_role_permissions/2026_XX_XX_XXXXXX_add_permissions_essential_knowledges.php` — insertar permisos: `essential_knowledge.listar`, `essential_knowledge.crear`, `essential_knowledge.actualizar`, `essential_knowledge.actualizar_estado`, `essential_knowledge.eliminar`. Asignar a roles Admin y Didi.
 
 **Funciones de BD a crear:**
 - `database/migrations/functions/fn_create_essential_knowledge/` — `fn_create_essential_knowledge(p_code, p_name, p_course_id, p_topic_id, p_svg_filename, p_created_by)` → inserta y retorna el registro.
@@ -60,7 +60,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - `Infrastructure/Http/Mappers/` — 7 mappers (uno por acción), método `fromRequest(Validator): RequestDto`
 - `Infrastructure/Http/Responses/ListEssentialKnowledgeResponse.php` — formatea respuesta paginada
 - `Infrastructure/Http/Responses/GetByIdEssentialKnowledgeResponse.php` — respuesta con URL firmada
-- `Infrastructure/Http/Routes/RoutesEssentialKnowledge.php` — 7 rutas REST con middleware `auth:sanctum` y `permission:essential_knowledge.*`
+- `Infrastructure/Http/Routes/RoutesEssentialKnowledge.php` — 7 rutas REST con middleware `auth:sanctum` y permiso específico: `index` → `essential_knowledge.listar`, `store` → `essential_knowledge.crear`, `show` → `essential_knowledge.listar`, `update` → `essential_knowledge.actualizar`, `updateIsActive` → `essential_knowledge.actualizar_estado`, `delete` → `essential_knowledge.eliminar`, `uploadSvg` → `essential_knowledge.crear`
 - `Infrastructure/Http/Routes/index.php` — require de RoutesEssentialKnowledge
 - `Infrastructure/Persistences/QueryBuilder/Read/EssentialKnowledgeReadQueryBuilder.php` — implementa read repository (usa `CallerBuilder` para funciones BD y `ConnectionBuilder::read()`)
 - `Infrastructure/Persistences/QueryBuilder/Write/EssentialKnowledgeWriteQueryBuilder.php` — implementa write repository (usa `CallerBuilder` para funciones BD y `ConnectionBuilder::write()`)
@@ -76,12 +76,12 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 ### Frontend — `odiseo-frontend/`
 
 **Nuevo módulo `src/modules/essential-knowledge/`:**
-- `pages/EssentialKnowledge.page.vue` — página principal con tabla paginada (10 registros), columnas: N.°, Código, Curso [código][nombre], Tema [código][nombre], Nombre, Fecha Creación, Estado, Acciones (Ver/Editar/Eliminar). Filtros opcionales: búsqueda texto (código/nombre), curso (autocomplete restringido por usuario), tema, estado (defecto: Activo). Botón "Agregar saber necesario".
-- `dialogs/EssentialKnowledge.dialog.vue` — modal crear/editar con campos: Curso (select), Tema (dependiente del curso), Nombre (textarea con contador 150 chars), carga SVG (input file + preview). Botón Guardar deshabilitado si faltan campos obligatorios. Confirmación al cancelar si hay datos (AC-2.5).
-- `dialogs/EssentialKnowledgeShow.dialog.vue` — modal ver imagen SVG responsive, metadatos del saber. Manejo de error "No se pudo visualizar la imagen del saber necesario" (AC-4.2).
+- `pages/EssentialKnowledge.page.vue` — página principal con tabla paginada (10 registros), columnas: N.°, Código, Curso [código][nombre], Tema [código][nombre], Nombre, Fecha Creación, Estado, Acciones (Ver/Editar/Eliminar). Filtros opcionales: búsqueda texto (código/nombre), curso (autocomplete restringido por usuario), tema, estado (defecto: Activo). Botón "Agregar saber necesario" y "Limpiar filtros" / "Ver todos". Orden por defecto: Fecha Creación descendente.
+- `dialogs/EssentialKnowledge.dialog.vue` — modal crear/editar con campos: Curso (select), Tema (dependiente del curso), Nombre (textarea con contador 150 chars), carga SVG (input file + preview, validación MIME `image/svg+xml` y tamaño ≤5 MB con mensaje AC-2.8). Botón Guardar deshabilitado si faltan campos obligatorios. Confirmación al cancelar si hay datos (AC-2.5).
+- `dialogs/EssentialKnowledgeShow.dialog.vue` — modal con datos del saber (Código, Nombre, Curso, Tema) más imagen SVG responsive. Manejo de error "No se pudo visualizar la imagen del saber necesario" (AC-4.2).
 - `dialogs/EssentialKnowledgeChangeState.dialog.vue` — confirmación cambio estado. Mensaje: "El estado del saber necesario ha sido actualizado."
 - `dialogs/EssentialKnowledgeDelete.dialog.vue` — confirmación eliminación.
-- `components/ImageUploader.vue` — componente de carga SVG con validación de tipo MIME y tamaño, preview.
+- `components/ImageUploader.vue` — componente de carga SVG con validación de tipo MIME (`image/svg+xml`), tamaño ≤5 MB y preview.
 - `services/essential-knowledge.service.ts` — métodos CRUD (`list`, `getById`, `store`, `update`, `delete`, `updateIsActive`) + `uploadSvg(file: File)`. Usa `odiseoApi` de Axios.
 - `models/EssentialKnowledgeList.model.ts` — interfaz TypeScript para los datos del listado.
 - `enums/essential-knowledge.headers.js` — definición de columnas de la tabla.
@@ -89,7 +89,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - `routes.ts` (opcional) o registro en el sistema de rutas existente.
 
 **Navegación — `src/navigation/vertical/odiseo/` (archivo existente a modificar):**
-- Agregar entrada "Saberes Necesarios" dentro del módulo Cursos, con `subject: 'essential-knowledge'`, `action: 'listar'`, visible solo para roles Admin y Didi (constitution §2.10). Ruta `odiseo-cursos-essential-knowledge`.
+- Agregar entrada "Saberes Necesarios" dentro del módulo Cursos, con `subject: 'essential-knowledge'`, `action: 'listar'`, visible solo para usuarios con permiso `essential_knowledge.listar` (constitution §2.10). Ruta `odiseo-cursos-essential-knowledge`.
 
 ## 3. Decisiones de arquitectura (mini-ADR) ← §11 (ADRs)
 
@@ -115,7 +115,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 
 ### ADR-5: Sanitización de SVG obligatoria
 **DECISIÓN:** Todo SVG subido se sanitiza (eliminar `<script>`, `<foreignObject>`, event handlers `on*`) antes de almacenarse en GCS.
-**POR QUÉ:** Los SVGs pueden contener scripts maliciosos (XSS). El spec §6 lo señala como riesgo. Constitution §5 exige protección contra XSS.
+**POR QUÉ:** Los SVGs pueden contener scripts maliciosos (XSS). El spec NFR-7 lo exige explícitamente. Constitution §5 exige protección contra XSS.
 **ALTERNATIVA DESCARTADA:** Confiar en validación client-side (bypasseable). Desactivar SVG rendering en frontend (pérdida de funcionalidad).
 
 ### ADR-6: `deleted_at` para soft delete, `is_active` para visibilidad en gestión
@@ -123,12 +123,7 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 **POR QUÉ:** `fl_status` era redundante con `deleted_at` — ambos cumplían el mismo rol de soft delete. Se reemplaza por `is_active` con semántica distinta: un registro inactivo (`is_active = false`) sigue siendo visible para que el usuario pueda reactivarlo; uno eliminado (`deleted_at` not null) desaparece por completo. Constitution §3 exige soft delete.
 **ALTERNATIVA DESCARTADA:** Usar solo `deleted_at` (un registro inactivo desaparecería, impidiendo reactivación). Usar `fl_status` legacy (redundante con `deleted_at`, confundía ambos conceptos).
 
-### ADR-7: Sanitización de SVG obligatoria ante código malicioso
-**DECISIÓN:** Se implementa un pipeline de sanitización que elimina elementos peligrosos (`<script>`, `<foreignObject>`, `on*`, `javascript:`, etc.) antes del almacenamiento.
-**POR QUÉ:** Los SVG pueden contener código malicioso ejecutable en el navegador (XSS). El spec §6 lo identifica como riesgo. Constitution §5 exige protección contra XSS.
-**ALTERNATIVA DESCARTADA:** Deshabilitar renderización de SVG en el frontend (pérdida de la funcionalidad principal). Confiar en la validación del tipo MIME (insuficiente, un SVG puede ser válido pero malicioso).
-
-### ADR-8: Correlativo máximo 4 dígitos (9999)
+### ADR-7: Correlativo máximo 4 dígitos (9999)
 **DECISIÓN:** Si al generar el correlativo se supera 9999, el sistema rechaza la operación con mensaje claro.
 **POR QUÉ:** El spec §4 (caso límite) lo exige. Mantiene la consistencia del formato documentado.
 **ALTERNATIVA DESCARTADA:** Permitir 5+ dígitos (rompe formato). Reiniciar correlativo (pérdida de trazabilidad).
@@ -141,15 +136,15 @@ Toda la estructura es **nueva** (crear desde cero). Siguiente el patrón del mó
 - **Correlativo agotado (>9999)**: El tema alcanzó el máximo de saberes. Mitigado por ADR-8 (validación + mensaje). Plan de contingencia: evaluar expansión a 5 dígitos.
 - **Google Cloud Storage**: Timeout o fallo de autenticación. Mitigado con reintentos, timeout configurable y logging.
 - **Cursos no asignados al usuario**: El filtro de curso debe restringirse a los cursos del usuario autenticado. Si no se implementa correctamente, usuarios ven cursos no autorizados.
-- **SVG de gran tamaño (>5 MB)**: Sin límite definido, el servidor puede sobrecargarse. El spec §4 lo menciona como pendiente de definir.
+- **SVG de gran tamaño (>5 MB)**: El límite de 5 MB está definido por AC-2.8. Validar también en servidor para evitar rechazo luego de la subida a GCS.
 
 ## 5. Trazabilidad: cada US del spec → dónde se implementa en este plan
 
 - **US-1 (Acceder a sección Saberes Necesarios)** → Navegación lateral (`src/navigation/vertical/odiseo/`) con entrada "Saberes Necesarios" protegida por CASL (`subject: 'essential-knowledge'`, `action: 'listar'`). Ruta de página (`src/pages/odiseo/cursos/essential-knowledge/index.vue`). Backend: ruta `GET api/v2/catalog/essential-knowledge` con middleware `permission:essential_knowledge.listar`.
 - **US-2 (Crear un saber necesario)** → `EssentialKnowledge.dialog.vue` (modal creación), `StoreEssentialKnowledgeUseCase` (generación código + validación unicidad), `StoreEssentialKnowledgeRequestValidator` (validación SVG obligatorio, nombre ≤150 chars, curso-tema existentes), `UploadSvgEssentialKnowledgeUseCase` (subida SVG a GCS y sanitización).
-- **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros con columnas del spec AC-3.1), `FilterEssentialKnowledgeUseCase` (filtros opcionales: código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
-- **US-4 (Ver imagen SVG del saber)** → `EssentialKnowledgeShow.dialog.vue` (imagen SVG responsive, meta-datos, manejo de error AC-4.2), `GetByIdEssentialKnowledgeUseCase` (retorna URL firmada de GCS), `GetByIdEssentialKnowledgeResponse`.
+- **US-3 (Visualizar listado con filtros)** → `EssentialKnowledge.page.vue` (tabla paginada 10 registros, columnas del spec AC-3.1, orden por defecto Fecha Creación DESC, botón "Limpiar filtros" AC-3.5), `FilterEssentialKnowledgeUseCase` (filtros opcionales: código/nombre, curso, tema, estado), `FilterEssentialKnowledgeRequestValidator`, `fn_list_essential_knowledge` (BD paginada).
+- **US-4 (Ver imagen SVG del saber)** → `EssentialKnowledgeShow.dialog.vue` (datos del saber + imagen SVG responsive, manejo de error AC-4.2), `GetByIdEssentialKnowledgeUseCase` (retorna URL firmada de GCS + metadatos), `GetByIdEssentialKnowledgeResponse`.
 - **US-5 (Editar un saber necesario)** → `EssentialKnowledge.dialog.vue` (modo edición, campos editables: tema, nombre, imagen), `UpdateEssentialKnowledgeUseCase` (regenera código si cambia tema, valida unicidad), `UpdateEssentialKnowledgeRequestValidator`.
-- **US-6 (Cambiar estado activo/inactivo)** → `EssentialKnowledgeChangeState.dialog.vue` (confirmación), `UpdateIsActiveEssentialKnowledgeUseCase`, `UpdateIsActiveEssentialKnowledgeValidator`, `fn_update_essential_knowledge` (BD actualiza is_active).
+- **US-6 (Cambiar estado activo/inactivo)** → `EssentialKnowledgeChangeState.dialog.vue` (confirmación), `UpdateIsActiveEssentialKnowledgeUseCase`, `UpdateIsActiveEssentialKnowledgeValidator`, `fn_update_essential_knowledge` (BD actualiza is_active). Ruta protegida con permiso `essential_knowledge.actualizar_estado`.
 - **US-7 (Eliminar un saber necesario)** → `EssentialKnowledgeDelete.dialog.vue` (confirmación), `DeleteEssentialKnowledgeUseCase` (soft delete), `DeleteEssentialKnowledgeRequestValidator`.
 
