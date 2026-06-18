@@ -92,7 +92,8 @@ Plataforma para la gestión de preguntas, administración academica y generació
 
 ### Base de datos
 - Una sola base de datos con schema `odiseo`.
-- Las migraciones se ejecutan en orden secuencial, sin alterar migraciones ya aplicadas.
+- Las migraciones se deben ejecutar con php artisan migrate. Ejecutando un archvo de migracion a la vez
+- Las migraciones deben ejecutarse 2 veces. La primera vez se ejecuta una migracion a la vez, y luego se hace un rollback de la migracion para confirmar que el down esta correctamente creado. Luego se vuelve a ejecutar la migracion.
 - Las operaciones pesadas (generación de PDF, migración de fórmulas matemáticas, etc.) se ejecutan como Jobs en cola Redis, nunca en el request HTTP.
 
 ## 5. Requisitos de seguridad
