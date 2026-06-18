@@ -171,4 +171,4 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 ### TC-34 (caso feliz): Estado filtro por defecto "Activo"
 **Datos:** Usuario accede a la sección Saberes Necesarios.
 **Pasos:** Ingresar a la sección.
-**Esperado:** El filtro de Estado muestra por defecto "Activo" y la tabla carga mostrando solo los saberes con estado "Habilitado".
+**Esperado:** El filtro de Estado muestra por defecto "Activo" y la tabla carga mostrando solo los saberes con estado "Activo".
