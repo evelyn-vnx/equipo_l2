@@ -84,7 +84,7 @@ Test Design
 | US-1 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-1, TC-2 | ✅ |
 | AC-1.1 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-1 | ✅ |
 | AC-1.2 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-2 | ✅ |
-| US-2 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-3..TC-13 | ✅ |
+| US-2 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-3..TC-13, TC-31 | ✅ |
 | AC-2.1 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-3 | ✅ |
 | AC-2.2 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-4 | ✅ |
 | AC-2.3 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-5, TC-6, TC-7 | ✅ |
@@ -92,41 +92,40 @@ Test Design
 | AC-2.5 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-9, TC-10 | ✅ |
 | AC-2.6 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-11 | ✅ |
 | AC-2.7 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-12, TC-13 | ✅ |
-| AC-2.8 | plan.md — Trazabilidad (US-2) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| US-3 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-14..TC-16 | ✅ |
+| AC-2.8 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-31 | ✅ |
+| US-3 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-14..TC-19, TC-32..TC-38 | ✅ |
 | AC-3.1 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-14 | ✅ |
-| AC-3.2 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-15, TC-16 | ✅ |
-| AC-3.3 | plan.md — Trazabilidad (US-3) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-3.4 | plan.md — Trazabilidad (US-3) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-3.5 | plan.md — Trazabilidad (US-3) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| US-4 | plan.md — Trazabilidad (US-4) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-4.1 | plan.md — Trazabilidad (US-4) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-4.2 | plan.md — Trazabilidad (US-4) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| US-5 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-5.1 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-5.2 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-5.3 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-5.4 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-5.5 | plan.md — Trazabilidad (US-5) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| US-6 | plan.md — Trazabilidad (US-6) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-6.1 | plan.md — Trazabilidad (US-6) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| US-7 | plan.md — Trazabilidad (US-7) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
-| AC-7.1 | plan.md — Trazabilidad (US-7) | test-cases.md: [PENDIENTE] | [PENDIENTE] |
+| AC-3.2 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-15, TC-16, TC-17, TC-35 | ✅ |
+| AC-3.3 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-18, TC-32, TC-36 | ✅ |
+| AC-3.4 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-19, TC-37 | ✅ |
+| AC-3.5 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-35, TC-38 | ✅ |
+| US-4 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-20, TC-21 | ✅ |
+| AC-4.1 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-20 | ✅ |
+| AC-4.2 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-21 | ✅ |
+| US-5 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-22..TC-26, TC-23 | ✅ |
+| AC-5.1 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-22 | ✅ |
+| AC-5.2 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-23 | ✅ |
+| AC-5.3 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-24 | ✅ |
+| AC-5.4 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-25 | ✅ |
+| AC-5.5 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-26 | ✅ |
+| US-6 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
+| AC-6.1 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
+| US-7 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40 | ✅ |
+| AC-7.1 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40 | ✅ |
 
 > Nota: Las referencias "plan.md — Trazabilidad (US-X)" apuntan a la sección "Trazabilidad: cada US del spec → dónde se implementa en este plan" dentro de plan.md.
 
 ### Hallazgos
 
 #### Huecos detectados
-- Falta de casos de prueba documentados en test-cases.md para: AC-2.8, AC-3.3, AC-3.4, AC-3.5, AC-4.*, AC-5.*, AC-6.*, AC-7.* → marcar como [PENDIENTE] en matriz.
 - Responsables por artefacto no especificados (constitution.md, spec.md, plan.md, test-cases.md).
 
 #### Scope creep detectado
-- Elementos detallados en plan.md (funciones y migraciones de BD, ADRs y providers) sin un requisito funcional único que los justifique explícitamente en spec.md (necesita verificación de alcance).
+- Elementos detallados en plan.md (funciones y migraciones de BD, ADRs y providers) requieren validación de alcance frente a stakeholders.
 
 ### Veredicto
 🟢 PASS | 🟡 PASS CON OBSERVACIONES | 🔴 FAIL
-[PENDIENTE] — completar tras resolución de huecos y asignación de responsables.
+[PENDIENTE] — completar tras asignación de responsables y evidencia de commits/PRs asociados a las implementaciones y pruebas.
 
 ## Estado final de revisión
 
@@ -152,5 +151,4 @@ Archivos relevantes (local):
 
 Instrucción siguiente recomendada:
 - Completar responsables y asignar revisor(es) para el Gate de claridad.
-- Añadir/actualizar casos de prueba faltantes en test-cases.md (marcados arriba).
-- Ejecutar la checklist y actualizar los veredictos y la coverage matrix con evidencia de commits/PRs.
+- Si se desea, generar una matriz detallada que incluya número de línea o sección del spec para cada requisito (opcional).
