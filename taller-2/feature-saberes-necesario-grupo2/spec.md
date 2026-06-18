@@ -111,7 +111,7 @@ Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar
 ## 3. Requisitos no funcionales (NFR)
 
 - **NFR-1 — Rendimiento:** La carga inicial del listado de Saberes Necesarios debe completarse en menos de 2 segundos.
-- **NFR-2 — Formato de imagen:** Solo se aceptan archivos `.svg`. El sistema must validate MIME type (`image/svg+xml`) y la extensión en el lado servidor, no solo en el cliente.
+- **NFR-2 — Formato de imagen:** Solo se aceptan archivos `.svg`. El sistema debe validar el tipo MIME (`image/svg+xml`) y la extensión en el lado servidor, no solo en el cliente.
 - **NFR-3 — Unicidad del código:** El código generado `[cod_curso]-[cod_tema][correlativo]` debe ser único en la base de datos; la generación debe ser atómica para evitar colisiones en inserciones concurrentes.
 - **NFR-4 — Longitud de nombre:** El campo Nombre del saber acepta un máximo de 150 caracteres. La validación debe ejecutarse tanto en el front-end (contador visible) como en el back-end.
 - **NFR-5 — Control de acceso:** El acceso a la sección y todas sus operaciones deben verificarse por rol en el back-end; la validación solo en el front-end no es suficiente.
@@ -155,7 +155,7 @@ Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar
 - Carga y previsualización de imagen SVG adaptada al tamaño de pantalla del usuario.
 - Actualización automática del código al cambiar de tema.
 - Filtros por código/nombre, curso (restringido al usuario), tema y estado.
-- Control de acceso por rol (Administrador y Didi).
+- Control de acceso por rol (Administrador y Didi) y por permisos especificados en los criterios de aceptación.
 - Mensajes de confirmación y error definidos en los criterios de aceptación.
 
 **FUERA (explícito):**
