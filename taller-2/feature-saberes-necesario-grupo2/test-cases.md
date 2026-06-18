@@ -4,7 +4,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 ## Casos de Prueba (Test Cases)
 
 ### TC-1 (de AC-1.1, caso feliz): Visualización de la opción Saberes Necesarios
-**Datos:** Usuario Administrador o Didi autenticado con permisos en el módulo Cursos.
+**Datos:** Usuario autenticado con permiso "Listar" sobre Saberes Necesarios (ej. Administrador o Didi).
 **Pasos:** Navegar al módulo de Cursos y observar el menú lateral.
 **Esperado:** La opción "Saberes Necesarios" aparece visible y seleccionable en el menú lateral del módulo Cursos.
 
@@ -29,7 +29,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
 ### TC-6 (de AC-2.3, caso de error): Botón Guardar deshabilitado por falta de imagen
-**Datos:** Modal abierto. Curso: Álgebra. Tema: Fracciomes. Nombre: "Fracciones propias". Imagen: no cargada.
+**Datos:** Modal abierto. Curso: Álgebra. Tema: Fracciones. Nombre: "Fracciones propias". Imagen: no cargada.
 **Pasos:** Completar Curso, Tema y Nombre. No cargar ninguna imagen. Intentar hacer clic en "Guardar".
 **Esperado:** El botón "Guardar" permanece deshabilitado (no se puede hacer clic).
 
@@ -43,7 +43,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Pasos:** Intentar cargar un archivo con extensión .png.
 **Esperado:** El sistema bloquea la acción inmediatamente y muestra en un modal: "El archivo debe estar en formato SVG."
 
-### TC-9 (de AC-2.5, caso feliz): Cancelación sin datos
+### TC-9 (de AC-2.5, caso borde): Cancelación sin datos — cierre directo
 **Datos:** Modal abierto. Ningún campo completado.
 **Pasos:** Abrir el modal de creación. No ingresar ningún dato. Hacer clic en "Cancelar".
 **Esperado:** El modal se cierra directamente, sin mostrar ningún mensaje de confirmación.
@@ -51,7 +51,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 ### TC-10 (de AC-2.5, caso feliz): Cancelación con datos ingresados
 **Datos:** Modal abierto. Imagen: fracciones_propias.svg cargada. Nombre: "Fracciones propias" escrito en el campo.
 **Pasos:** Ingresar datos en al menos un campo. Hacer clic en "Cancelar".
-**Esperado:** El sistema muestra un modal de confirmación con el mensaje: "¿Desea cancelar? Se perderán los datos ingresados." con opciones "Sí" (cierra el modal y descarta datos) y "No" (regresa al formulario).
+**Esperado:** El sistema muestra un modal de confirmación con el mensaje: "¿Desea cancelar? Se perderán los datos ingresados." con opciones "Sí, cancelar" (cierra el modal de creación y descarta todos los datos) y "No, continuar" (cierra el modal de confirmación y regresa al formulario con los datos intactos).
 
 ### TC-11 (de AC-2.6, caso de error): Nombre duplicado en mismo tema y curso
 **Datos:** Saber existente: curso álgebra (03), tema Fracciones (10), nombre "Fracciones propias". Intento de crear: curso Álgebra (03), tema Fracciones (10), nombre "Fracciones propias".
@@ -71,7 +71,7 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 ### TC-14 (de AC-3.1, caso feliz): Visualización de la tabla con todas las columnas
 **Datos:** Usuario accede a la sección Saberes Necesarios con al menos 10 saberes registrados.
 **Pasos:** Navegar a la sección Saberes Necesarios.
-**Esperado:** La pantalla carga mostrando una tabla paginada con 10 registros por defecto, con las siguientes columnas: N.° (correlativo 1, 2, 3...), Código (ej. 03-100001), Curso (ej. [03] Álgebra), Tema (ej. [10] Fracciones), Nombre (ej. "Fracciones propias"), Fecha Creación (ej. 16/06/2025), Estado ("Activo" o "Inactivo"), Acciones (iconos: Ver, Editar y Eliminar).
+**Esperado:** La pantalla carga en menos de 2 segundos (NFR-1) mostrando una tabla paginada con 10 registros por defecto, ordenados por Fecha Creación del más reciente al más antiguo, con las siguientes columnas: N.° (correlativo 1, 2, 3...), Código (ej. 03-100001), Curso (ej. [03] Álgebra), Tema (ej. [10] Fracciones), Nombre (ej. "Fracciones propias"), Fecha Creación (ej. 16/06/2025), Estado ("Activo" o "Inactivo"), Acciones (iconos: Ver, Editar y Eliminar).
 
 ### TC-15 (de AC-3.2, caso feliz): Búsqueda por código
 **Datos:** Listado con saberes que incluye uno con código 03-100001.
@@ -149,14 +149,14 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Esperado:** El sistema no permite el registro y muestra el mensaje: "No se pudo guardar el saber." (el límite de correlativos ha sido alcanzado).
 
 ### TC-30 (caso borde): SVG malicioso con scripts embebidos
-**Datos:** Archivo SVG que contiene código `<script>` embebido.
-**Pasos:** Intentar cargar un SVG con scripts maliciosos.
-**Esperado:** El sistema sanitiza el SVG eliminando contenido peligroso o rechaza el archivo y muestra un mensaje indicando que el SVG contiene elementos no permitidos. El sistema no ejecuta scripts.
+**Datos:** Archivo SVG que contiene código `<script>alert('xss')</script>` embebido en el markup.
+**Pasos:** Intentar cargar el SVG malicioso en el modal de creación de un saber.
+**Esperado:** El sistema sanitiza el SVG, eliminando los elementos `<script>` y cualquier event handler (`onload`, `onclick`, etc.) antes de almacenarlo. La imagen se guarda sin código ejecutable. El SVG malicioso no se rechaza sino que se limpia (NFR-7).
 
-### TC-31 (caso borde): Imagen SVG de gran tamaño (> 5 MB)
+### TC-31 (de AC-2.8, caso de error): Imagen SVG de gran tamaño (> 5 MB)
 **Datos:** Archivo SVG de 6 MB.
-**Pasos:** Intentar cargar un SVG superior al límite definido.
-**Esperado:** El sistema bloquea la carga y muestra el mensaje: "El archivo excede el tamaño máximo permitido de 5 MB."
+**Pasos:** Intentar cargar un SVG superior a 5 MB en el modal de creación o edición.
+**Esperado:** El sistema bloquea la carga y muestra el mensaje: "El archivo SVG supera el límite de 5 MB. Por favor, comprima la imagen o use un archivo de menor tamaño."
 
 ### TC-32 (caso feliz): Filtro de Cursos restringido al usuario
 **Datos:** Usuario con 2 cursos asignados.
@@ -172,3 +172,48 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Usuario accede a la sección Saberes Necesarios.
 **Pasos:** Ingresar a la sección.
 **Esperado:** El filtro de Estado muestra por defecto "Activo" y la tabla carga mostrando solo los saberes con estado "Activo".
+
+### TC-35 (de AC-3.2, caso feliz): Limpieza del campo de búsqueda
+**Datos:** Listado filtrado por una búsqueda activa (ej. "fracciones").
+**Pasos:** Borrar completamente el texto del campo de búsqueda.
+**Esperado:** La tabla muestra todos los saberes disponibles, aplicando el filtro de Estado por defecto ("Activo") y el ordenamiento por defecto por Fecha Creación del más reciente al más antiguo.
+
+### TC-36 (de AC-3.3, caso feliz): Filtro de Curso — opción "Todos"
+**Datos:** Usuario con cursos Álgebra (03) y Lengua (05) asignados. Saberes existentes en ambos cursos.
+**Pasos:** Abrir el filtro de Curso y seleccionar "Todos".
+**Esperado:** La tabla muestra los saberes de todos los cursos asignados al usuario, aplicando el filtro de Estado por defecto ("Activo") y el ordenamiento por defecto por Fecha Creación del más reciente al más antiguo.
+
+### TC-37 (de AC-3.4, caso feliz): Filtro de Estado — opción "Todos"
+**Datos:** Listado con saberes en estado "Activo" e "Inactivo".
+**Pasos:** Abrir el filtro de Estado y seleccionar "Todos".
+**Esperado:** La tabla aplica el filtro por defecto de Estado "Activo" (no muestra todos), ordenados por Fecha Creación del más reciente al más antiguo.
+
+### TC-38 (de AC-3.5, caso feliz): Limpiar todos los filtros
+**Datos:** Listado con múltiples filtros aplicados (búsqueda por nombre, curso seleccionado, estado "Inactivo").
+**Pasos:** Hacer clic en el botón "Limpiar filtro" o "Ver todos".
+**Esperado:** La tabla muestra todos los saberes disponibles con el filtro de Estado por defecto "Activo" y ordenados por Fecha Creación del más reciente al más antiguo, independientemente de los filtros previamente aplicados.
+
+### TC-39 (de AC-6.1, caso feliz): Cambio de estado Inactivo a Activo
+**Datos:** Saber existente con estado "Inactivo".
+**Pasos:** Hacer clic en el botón de cambio de estado del saber. Confirmar la acción en el modal de confirmación.
+**Esperado:** El estado cambia de "Inactivo" a "Activo". Se muestra el mensaje: "El estado del saber necesario ha sido actualizado." y en la tabla refleja el nuevo estado.
+
+### TC-40 (de AC-7.1, caso de error): Eliminación bloqueada por saber en uso
+**Datos:** Saber existente que está asociado a una o más preguntas activas.
+**Pasos:** Hacer clic en el ícono de "Eliminar" sobre el saber. Confirmar la eliminación en el modal de confirmación.
+**Esperado:** El sistema bloquea la eliminación y muestra un mensaje de error: "No se puede eliminar el saber porque está siendo utilizado en preguntas." El saber permanece en el listado.
+
+### TC-41 (caso borde): Nombre idéntico en distinto tema del mismo curso
+**Datos:** Saber existente: curso Álgebra (03), tema Fracciones (10), nombre "Fracciones propias". Nuevo intento: curso Álgebra (03), tema Exponentes (15), nombre "Fracciones propias".
+**Pasos:** Crear un nuevo saber con el mismo nombre pero en un tema diferente del mismo curso.
+**Esperado:** El sistema permite la creación sin conflicto de unicidad. Ambos saberes coexisten con el mismo nombre en temas distintos.
+
+### TC-42 (caso borde): Nombre idéntico en distinto curso
+**Datos:** Saber existente: curso Álgebra (03), tema Fracciones (10), nombre "Fracciones propias". Nuevo intento: curso Lengua (05), tema Gramática (01), nombre "Fracciones propias".
+**Pasos:** Crear un nuevo saber con el mismo nombre en un curso diferente.
+**Esperado:** El sistema permite la creación sin conflicto de unicidad. Ambos saberes coexisten con el mismo nombre en cursos distintos.
+
+### TC-43 (caso borde): Carga simultánea del mismo nombre en el mismo tema
+**Datos:** Dos usuarios (A y B) intentan crear simultáneamente un saber con curso Álgebra (03), tema Fracciones (10), nombre "Fracciones propias".
+**Pasos:** Ambos usuarios completan el formulario y hacen clic en "Guardar" al mismo tiempo.
+**Esperado:** Solo una de las dos operaciones tiene éxito. La segunda operación es rechazada a nivel de base de datos (restricción de unicidad) y el sistema muestra un mensaje de error indicando que el nombre ya existe en ese tema.
