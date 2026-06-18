@@ -107,3 +107,38 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Saber existente con imagen SVG corrupta o no accesible.
 **Pasos:** Hacer clic en "Ver" sobre el saber con la imagen dañada.
 **Esperado:** El sistema muestra el mensaje: "No se pudo visualizar la imagen del saber necesario."
+
+### TC-22 (de AC-5.1, caso feliz): Apertura del modal de edición
+**Datos:** Saber existente en el listado.
+**Pasos:** Localizar un saber en el listado. Hacer clic en el ícono de "Editar".
+**Esperado:** Se abre un modal de edición mostrando: Campo Curso (solo lectura, no editable), Campo Tema (editable, lista desplegable), Campo Nombre (editable), Imagen SVG actual previsualizada con opción para reemplazar, Botones "Guardar" y "Cancelar".
+
+### TC-23 (de AC-5.2, caso feliz): Actualización automática de código al cambiar tema
+**Datos:** Saber existente: código 03-100001, tema Fracciones (cod_tema: 10). Cambio a tema Exponentes (cod_tema: 15).
+**Pasos:** Editar el saber y cambiar el tema de "Fracciones" a "Exponentes". Hacer clic en "Guardar".
+**Esperado:** El sistema actualiza el código del saber a 03-150001 (manteniendo el mismo correlativo) y el código anterior queda reemplazado. El mensaje de confirmación muestra el nuevo código actualizado.
+
+### TC-24 (de AC-5.3, caso feliz): Confirmación de edición exitosa
+**Datos:** Saber existente, cambios válidos realizados (tema, nombre o imagen).
+**Pasos:** Realizar cambios válidos en el modal de edición. Hacer clic en "Guardar".
+**Esperado:** El sistema actualiza el registro y muestra el mensaje: "Saber necesario actualizado correctamente."
+
+### TC-25 (de AC-5.4, caso de error): Eliminación de imagen sin reemplazo en edición
+**Datos:** Saber existente en modo edición con imagen actual cargada.
+**Pasos:** Eliminar la imagen actual (sin cargar una nueva). Hacer clic en "Guardar".
+**Esperado:** El sistema bloquea la acción y muestra el mensaje: "Debe mantener o cargar una imagen válida en formato SVG."
+
+### TC-26 (de AC-5.5, caso de error): Nombre duplicado en edición dentro del mismo tema
+**Datos:** Saber editado: "Fracciones propias" (tema Fracciones). Otro saber existente en el mismo tema con nombre "Fracciones propias".
+**Pasos:** Editar el nombre y cambiarlo a "Fracciones propias" (coincidiendo con otro saber existente en el tema). Hacer clic en "Guardar".
+**Esperado:** El sistema bloquea la acción y muestra un mensaje de error: "El nombre ya existe en este tema. Por favor, elige otro nombre."
+
+### TC-27 (de AC-6.1, caso feliz): Cambio de estado Activo a Inactivo
+**Datos:** Saber existente con estado "Activo".
+**Pasos:** Hacer clic en el botón de cambio de estado del saber. Confirmar la acción en el modal.
+**Esperado:** El estado cambia de "Activo" a "Inactivo". Se muestra el mensaje: "El estado del saber necesario ha sido actualizado." y en la tabla refleja el nuevo estado.
+
+### TC-28 (de AC-7.1, caso feliz): Eliminación de saber no utilizado
+**Datos:** Saber existente que no está asociado a ninguna pregunta.
+**Pasos:** Hacer clic en el ícono de "Eliminar" sobre el saber. Confirmar la eliminación en el modal de confirmación.
+**Esperado:** El saber se elimina de la base de datos y desaparece del listado.
