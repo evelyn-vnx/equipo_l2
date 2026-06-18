@@ -46,34 +46,35 @@ Test Design
 ### Checklist
 
 #### Completitud
-- [ ] Cada User Story tiene criterios de aceptación
-- [ ] Los criterios son medibles
-- [ ] Se cubren errores
-- [ ] Se cubren casos borde
-- [ ] Se consideran NFR relevantes
+- [x] Cada User Story tiene criterios de aceptación
+- [x] Los criterios son medibles
+- [x] Se cubren errores
+- [x] Se cubren casos borde
+- [x] Se consideran NFR relevantes
 
 #### Claridad
 - [ ] No existen términos ambiguos
-- [ ] No existen requisitos vagos
-- [ ] Los valores son específicos
-- [ ] La redacción es verificable
+- [x] No existen requisitos vagos
+- [x] Los valores son específicos
+- [x] La redacción es verificable
 
 #### Consistencia
-- [ ] Terminología consistente
-- [ ] Nombres consistentes
+- [x] Terminología consistente
+- [x] Nombres consistentes
 - [ ] No existen contradicciones
 
 #### Testabilidad
-- [ ] Todos los requisitos son verificables
-- [ ] Existen criterios observables
-- [ ] No existen requisitos subjetivos
+- [x] Todos los requisitos son verificables
+- [x] Existen criterios observables
+- [x] No existen requisitos subjetivos
 
 ### Observaciones
-[PENDIENTE]
+- El rol "Didi" se menciona sin definición en el spec (§1 y §5 asumption). El término "solucionario" se usa sin glosario.
+- AC-3.4 y AC-3.5: al seleccionar "Todos" en Estado, el sistema aplica el filtro por defecto "Activo" en lugar de mostrar todos los estados. 
+- US-7 scope dice "solo si no está en uso" pero AC-7.1 solo cubre el caso feliz sin AC explícito para bloqueo por saber en uso.
 
 ### Veredicto
-🟢 PASS | 🟡 PASS CON OBSERVACIONES | 🔴 FAIL
-(Marcar resultado final tras la revisión)
+🟡 PASS CON OBSERVACIONES
 
 ## Gate de consistencia
 
