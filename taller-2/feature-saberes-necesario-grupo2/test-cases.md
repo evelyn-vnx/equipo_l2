@@ -142,3 +142,33 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 **Datos:** Saber existente que no está asociado a ninguna pregunta.
 **Pasos:** Hacer clic en el ícono de "Eliminar" sobre el saber. Confirmar la eliminación en el modal de confirmación.
 **Esperado:** El saber se elimina de la base de datos y desaparece del listado.
+
+### TC-29 (caso borde): Correlativo de código al llegar a 9999
+**Datos:** Intento de crear un nuevo saber cuando el correlativo actual del tema ya está en 9999.
+**Pasos:** Intentar crear un nuevo saber en un tema cuyo correlativo ha alcanzado 9999. Hacer clic en "Guardar".
+**Esperado:** El sistema no permite el registro y muestra el mensaje: "No se pudo guardar el saber." (el límite de correlativos ha sido alcanzado).
+
+### TC-30 (caso borde): SVG malicioso con scripts embebidos
+**Datos:** Archivo SVG que contiene código `<script>` embebido.
+**Pasos:** Intentar cargar un SVG con scripts maliciosos.
+**Esperado:** El sistema sanitiza el SVG eliminando contenido peligroso o rechaza el archivo y muestra un mensaje indicando que el SVG contiene elementos no permitidos. El sistema no ejecuta scripts.
+
+### TC-31 (caso borde): Imagen SVG de gran tamaño (> 5 MB)
+**Datos:** Archivo SVG de 6 MB.
+**Pasos:** Intentar cargar un SVG superior al límite definido.
+**Esperado:** El sistema bloquea la carga y muestra el mensaje: "El archivo excede el tamaño máximo permitido de 5 MB."
+
+### TC-32 (caso feliz): Filtro de Cursos restringido al usuario
+**Datos:** Usuario con 2 cursos asignados.
+**Pasos:** Abrir el filtro de Cursos en el listado.
+**Esperado:** El filtro muestra solo los 2 cursos asignados al usuario autenticado. El usuario no puede ver ni seleccionar cursos que no le pertenecen.
+
+### TC-33 (caso feliz): Filtro de Temas dinámico por curso seleccionado
+**Datos:** Curso Álgebra con temas: Fracciones, Exponentes, Logaritmos. Curso Lengua con temas: Gramática, Redacción.
+**Pasos:** Seleccionar "Álgebra" en el filtro de Cursos.
+**Esperado:** El filtro de Temas muestra solo: Fracciones, Exponentes, Logaritmos. Los temas de Lengua no aparecen.
+
+### TC-34 (caso feliz): Estado filtro por defecto "Activo"
+**Datos:** Usuario accede a la sección Saberes Necesarios.
+**Pasos:** Ingresar a la sección.
+**Esperado:** El filtro de Estado muestra por defecto "Activo" y la tabla carga mostrando solo los saberes con estado "Habilitado".
