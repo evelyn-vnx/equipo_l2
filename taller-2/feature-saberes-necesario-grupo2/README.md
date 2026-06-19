@@ -111,36 +111,19 @@ Test Design
 | AC-5.5 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-26 | ✅ |
 | US-6 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
 | AC-6.1 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
-| US-7 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40 | ✅ |
-| AC-7.1 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40 | ✅ |
+| US-7 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40, TC-44 | ✅ |
+| AC-7.1 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28 | ✅ |
+| AC-7.2 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-40 | ✅ |
+| AC-7.3 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-44 | ✅ |
 
 > Nota: Las referencias "plan.md — Trazabilidad (US-X)" apuntan a la sección "Trazabilidad: cada US del spec → dónde se implementa en este plan" dentro de plan.md.
-
-### Hallazgos
-
-#### Huecos detectados
-- Responsables por artefacto no especificados (constitution.md, spec.md, plan.md, test-cases.md).
-
-#### Scope creep detectado
-- Elementos detallados en plan.md (funciones y migraciones de BD, ADRs y providers) requieren validación de alcance frente a stakeholders.
-
-### Veredicto
-🟢 PASS | 🟡 PASS CON OBSERVACIONES | 🔴 FAIL
-[PENDIENTE] — completar tras asignación de responsables y evidencia de commits/PRs asociados a las implementaciones y pruebas.
-
-## Estado final de revisión
-
-| Gate | Estado |
-|--------|--------|
-| Claridad | [PENDIENTE] |
-| Consistencia | [PENDIENTE] |
 
 ## Evidencias y trazabilidad
 
 - Commit inicial (v0): c8868d30230ebc7f3c829016e0fea6c0b4d3237c
 - Refinamientos realizados: ver historial de commits.
-- Ajustes posteriores al gate de claridad: [PENDIENTE]
-- Ajustes posteriores al gate de consistencia: [PENDIENTE]
+- Ajustes posteriores al gate de claridad: Rol "Didi" definido en §5 Assumptions. Término "solucionario" reemplazado por "parámetros de diagramación de cada pregunta" en §1 y §6.
+- Ajustes posteriores al gate de consistencia: AC-3.4 y AC-3.5 corregidos en spec.md; TC-37 y TC-38 actualizados en test-cases.md para reflejar que "Todos" muestra activos e inactivos. AC-7.2 (bloqueo por saber en uso) y AC-7.3 (sin permisos) añadidos en spec.md; TC-40 actualizado y TC-44 creado en test-cases.md.
 
 ---
 

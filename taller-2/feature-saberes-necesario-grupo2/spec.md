@@ -4,22 +4,22 @@
 **Fecha:** 2025-06-17  
 **Roles involucrados:** Administrador, Didi  
 **Estado:** En revisión
-
+**Responsable:** Evelyn Noelia Pachas Arratia 
 ---
 
 ## Resumen ejecutivo
 
-Se incorpora al módulo de Cursos la gestión completa de Saberes Necesarios (crear, editar, cambiar estado, eliminar), reemplazando la práctica actual de agregarlos dentro del solucionario de cada pregunta y eliminando la galería externa no controlada. Cada saber se identifica con un código único auto-generado `[cod_curso]-[cod_tema][correlativo]`, contiene una imagen SVG obligatoria y tiene nombre único dentro de su tema (hasta 150 caracteres). La imagen se previsualiza adaptándose a la resolución de pantalla del usuario.
+Se incorpora al módulo de Cursos la gestión completa de Saberes Necesarios (crear, editar, cambiar estado, eliminar), reemplazando la práctica actual de agregarlos dentro de los parámetros de diagramación de cada pregunta y eliminando la galería externa no controlada que manejaban los decentes fuera de la plataforma. Cada saber se identifica con un código único auto-generado `[cod_curso]-[cod_tema][correlativo]`, contiene una imagen SVG obligatoria y tiene nombre único dentro de su tema (hasta 150 caracteres). La imagen se previsualiza adaptándose a la resolución de pantalla del usuario.
 
 ---
 
 ## 1. Contexto de negocio (qué y por qué)
 
 **Problema que resuelve:**  
-Los docentes actualmente añaden Saberes Necesarios dentro del solucionario de cada pregunta, lo que genera duplicidad de contenido cuando el mismo saber aparece en múltiples preguntas. Como consecuencia, se comenzó a usar una galería externa a Odiseo que produce pérdida de trazabilidad, control de versiones y estandarización.
+Los docentes actualmente añaden Saberes Necesarios dentro de los parámetros de diagramación de cada pregunta, lo que genera duplicidad de contenido cuando el mismo saber aparece en múltiples preguntas. Como consecuencia, se comenzó a usar una galería externa a Odiseo que produce pérdida de trazabilidad, control de versiones y estandarización.
 
 **Por qué ahora / a quién impacta:**  
-La duplicidad activa encarece la creación de contenido (tiempo de carga, coherencia visual) y la galería externa ya existe como workaround, lo que significa que el problema está siendo absorbido por los usuarios. Impacta directamente a Administradores y usuarios Didi.
+La duplicidad activa encarece la creación de contenido (tiempo de carga, coherencia visual) y la galería externa ya existe como workaround, lo que significa que el problema está siendo absorbido por los usuarios. Impacta directamente a Administradores y usuarios Didi (Diagramador/Diseñador).
 
 ---
 
@@ -64,9 +64,9 @@ Como usuario con permiso de "Listar" sobre Saberes Necesarios, quiero ver la lis
 
 **AC-3.3** — Dado que el usuario puede filtrar por Curso, cuando selecciona un curso de la lista (restringida a los cursos asignados al usuario), entonces la tabla muestra únicamente los saberes pertenecientes a ese curso. Si el usuario selecciona "Todos" o borra el filtro, entonces la tabla muestra los saberes de todos los cursos disponibles aplicando el filtro de Estado y el ordenamiento por defecto.
 
-**AC-3.4** — Dado que el usuario puede filtrar por Estado, cuando selecciona "Inactivo", entonces la tabla muestra solo los saberes con ese estado. Si el usuario selecciona "Todos" o borra el filtro de Estado, entonces se aplica el filtro por defecto que muestra los saberes "Activo" ordenados por Fecha Creación del más reciente al más antiguo.
+**AC-3.4** — Dado que el usuario puede filtrar por Estado, cuando selecciona "Inactivo", entonces la tabla muestra solo los saberes con ese estado. Si el usuario selecciona "Todos" o borra el filtro de Estado, entonces ya no se filtra por estado mostrando todos los registros activos e inactivos, pero siempre no eliminados.
 
-**AC-3.5** — Dado que el usuario borra todos los filtros aplicados (o hace clic en "Limpiarese filtro"/"Ver todos"), cuando el sistema limpia los filtros, entonces la tabla muestra todos los saberes con el filtro por defecto de Estado "Activo" y el ordenamiento por defecto por "Fecha Creación" del más reciente al más antiguo. El ordenamiento por defecto permanece siempre activo incluso cuando no hay filtros aplicados.
+**AC-3.5** — Dado que el usuario borra todos los filtros aplicados (o hace clic en "Limpiarese filtro"/"Ver todos"), cuando el sistema limpia los filtros, entonces la tabla muestra todos los saberes con el filtro, tanto activos como inactivos Y el ordenamiento por defecto por "Fecha Creación" del más reciente al más antiguo. El ordenamiento por defecto permanece siempre activo incluso cuando no hay filtros aplicados.
 
 ---
 
@@ -106,6 +106,9 @@ Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar
 
 **AC-7.1** — Dado que el usuario intenta eliminar un saber y tiene permiso de "Eliminar" sobre Saberes Necesarios, cuando confirma la eliminación, entonces el saber se elimina de la base de datos y desaparece del listado.
 
+**AC-7.2** — Dado que el usuario intenta eliminar un saber que está siendo utilizado, cuando confirma la eliminación, entonces el sistema bloquea la operación y muestra el mensaje: "El saber necesario no puede ser eliminado porque está siendo utilizado."
+
+**AC-7.3** — Dado que el usuario intenta eliminar un saber y no cuenta con permiso de "Eliminar" sobre Saberes Necesarios, cuando intenta ejecutar la acción, entonces el sistema no permite la eliminación y muestra el mensaje "No tiene los permisos suficientes para realizar esta acción".
 ---
 
 ## 3. Requisitos no funcionales (NFR)
@@ -161,7 +164,7 @@ Como usuario con permiso de "Eliminar" sobre Saberes Necesarios, quiero eliminar
 **FUERA (explícito):**
 - Gestión del catálogo de Cursos o Temas (son entidades preexistentes).
 - Asociación directa saber-pregunta desde esta pantalla (solo visualización de uso).
-- Migración automática de saberes actualmente en solucionarios de preguntas hacia la nueva galería.
+- Migración automática de saberes actualmente en parametro de diagramación de preguntas hacia la nueva galería.
 - Exportación o importación masiva de saberes (bulk upload/download).
 - Versionado o historial de cambios del saber (más allá del log de auditoría).
 - Edición del contenido SVG dentro del sistema (el sistema solo almacena y muestra el archivo).

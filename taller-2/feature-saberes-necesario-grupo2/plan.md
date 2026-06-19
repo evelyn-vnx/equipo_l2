@@ -1,5 +1,7 @@
-## Resumen ejecutivo
+# PLAN — Gestión de Saberes Necesarios por Tema de Curso
+**Responsable:** Rony Martín Quispe Quispe
 
+## Resumen ejecutivo
 Creación del módulo **Saber Necesario** desde cero bajo arquitectura hexagonal DDD en `src/` (backend) y feature module en frontend. Cada saber tiene código auto-generado `[cod_curso]-[cod_tema][correlativo]` (4 dígitos), nombre único por tema-curso (≤150 chars), imagen SVG obligatoria en Google Cloud Storage, y soporta eliminación lógica con estado activo/inactivo. El plan cubre BD (tablas + funciones + permisos), backend (Domain → Application → Infrastructure), frontend (módulo, páginas, diálogos, navegación) y tests (unitarios + integración).
 
 ## 1. Enfoque técnico (alto nivel)

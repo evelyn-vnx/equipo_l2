@@ -1,3 +1,5 @@
+# TESTCASE — Gestión de Saberes Necesarios por Tema de Curso
+**Responsable:** Andi Abraham Cuyotupa Casachagua 
 ## Resumen ejecutivo (≤150 palabras) ← §16.2
 La suite de pruebas valida la gestión completa de Saberes Necesarios en el módulo Cursos: creación con imagen SVG obligatoria, edición de imagen, nombre, tema con regeneración automática del código, visualización responsive del SVG, filtros por curso,tema,estado y búsqueda por código o nombre. También cubre cambio de estado (activo/inactivo) y eliminación de saberes, siempre que no estén siendo utilizados en preguntas, en caso contrario, el sistema bloquea la acción y notifica al usuario. Se priorizan las validaciones críticas: formato y peso del SVG, unicidad del nombre por tema-curso, límite de 150 caracteres, control de acceso por rol y consistencia del código auto-generado. Quedan fuera la migración masiva, la edición del contenido SVG y la gestión de cursos y temas.
 
@@ -186,22 +188,27 @@ La suite de pruebas valida la gestión completa de Saberes Necesarios en el mód
 ### TC-37 (de AC-3.4, caso feliz): Filtro de Estado — opción "Todos"
 **Datos:** Listado con saberes en estado "Activo" e "Inactivo".
 **Pasos:** Abrir el filtro de Estado y seleccionar "Todos".
-**Esperado:** La tabla aplica el filtro por defecto de Estado "Activo" (no muestra todos), ordenados por Fecha Creación del más reciente al más antiguo.
+**Esperado:** La tabla deja de filtrar por estado y muestra todos los saberes activos e inactivos (no eliminados), ordenados por Fecha Creación del más reciente al más antiguo.
 
 ### TC-38 (de AC-3.5, caso feliz): Limpiar todos los filtros
 **Datos:** Listado con múltiples filtros aplicados (búsqueda por nombre, curso seleccionado, estado "Inactivo").
 **Pasos:** Hacer clic en el botón "Limpiar filtro" o "Ver todos".
-**Esperado:** La tabla muestra todos los saberes disponibles con el filtro de Estado por defecto "Activo" y ordenados por Fecha Creación del más reciente al más antiguo, independientemente de los filtros previamente aplicados.
+**Esperado:** La tabla muestra todos los saberes disponibles, tanto activos como inactivos (no eliminados), sin ningún filtro aplicado, ordenados por Fecha Creación del más reciente al más antiguo.
 
 ### TC-39 (de AC-6.1, caso feliz): Cambio de estado Inactivo a Activo
 **Datos:** Saber existente con estado "Inactivo".
 **Pasos:** Hacer clic en el botón de cambio de estado del saber. Confirmar la acción en el modal de confirmación.
 **Esperado:** El estado cambia de "Inactivo" a "Activo". Se muestra el mensaje: "El estado del saber necesario ha sido actualizado." y en la tabla refleja el nuevo estado.
 
-### TC-40 (de AC-7.1, caso de error): Eliminación bloqueada por saber en uso
+### TC-40 (de AC-7.2, caso de error): Eliminación bloqueada por saber en uso
 **Datos:** Saber existente que está asociado a una o más preguntas activas.
 **Pasos:** Hacer clic en el ícono de "Eliminar" sobre el saber. Confirmar la eliminación en el modal de confirmación.
-**Esperado:** El sistema bloquea la eliminación y muestra un mensaje de error: "No se puede eliminar el saber porque está siendo utilizado en preguntas." El saber permanece en el listado.
+**Esperado:** El sistema bloquea la eliminación y muestra el mensaje: "El saber necesario no puede ser eliminado porque está siendo utilizado." El saber permanece en el listado.
+
+### TC-44 (de AC-7.3, caso de error): Eliminación bloqueada por falta de permisos
+**Datos:** Usuario sin permiso de "Eliminar" sobre Saberes Necesarios.
+**Pasos:** Intentar ejecutar la acción de eliminar sobre cualquier saber.
+**Esperado:** El sistema no permite la eliminación y muestra el mensaje: "No tiene los permisos suficientes para realizar esta acción."
 
 ### TC-41 (caso borde): Nombre idéntico en distinto tema del mismo curso
 **Datos:** Saber existente: curso Álgebra (03), tema Fracciones (10), nombre "Fracciones propias". Nuevo intento: curso Álgebra (03), tema Exponentes (15), nombre "Fracciones propias".

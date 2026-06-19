@@ -1,4 +1,5 @@
 # Constitution del SDD — Odiseo
+**Responsable:** Evelyn Noelia Pachas Arratia, Rony Martín Quispe Quispe, Andi Abraham Cuyotupa Casachagua 
 
 ## 1. Objetivo del proyecto
 
