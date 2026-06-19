@@ -79,40 +79,33 @@ Test Design
 ### Coverage Matrix
 
 | Requisito | Plan | Caso de prueba | Estado |
-|------------|--------|----------------|---------|
-| US-1 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-1, TC-2 | ✅ |
-| AC-1.1 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-1 | ✅ |
-| AC-1.2 | plan.md — Trazabilidad (US-1) | test-cases.md: TC-2 | ✅ |
-| US-2 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-3..TC-13, TC-31 | ✅ |
-| AC-2.1 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-3 | ✅ |
-| AC-2.2 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-4 | ✅ |
-| AC-2.3 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-5, TC-6, TC-7 | ✅ |
-| AC-2.4 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-8 | ✅ |
-| AC-2.5 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-9, TC-10 | ✅ |
-| AC-2.6 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-11 | ✅ |
-| AC-2.7 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-12, TC-13 | ✅ |
-| AC-2.8 | plan.md — Trazabilidad (US-2) | test-cases.md: TC-31 | ✅ |
-| US-3 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-14..TC-19, TC-32..TC-38 | ✅ |
-| AC-3.1 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-14 | ✅ |
-| AC-3.2 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-15, TC-16, TC-17, TC-35 | ✅ |
-| AC-3.3 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-18, TC-32, TC-36 | ✅ |
-| AC-3.4 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-19, TC-37 | ✅ |
-| AC-3.5 | plan.md — Trazabilidad (US-3) | test-cases.md: TC-35, TC-38 | ✅ |
-| US-4 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-20, TC-21 | ✅ |
-| AC-4.1 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-20 | ✅ |
-| AC-4.2 | plan.md — Trazabilidad (US-4) | test-cases.md: TC-21 | ✅ |
-| US-5 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-22..TC-26, TC-23 | ✅ |
-| AC-5.1 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-22 | ✅ |
-| AC-5.2 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-23 | ✅ |
-| AC-5.3 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-24 | ✅ |
-| AC-5.4 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-25 | ✅ |
-| AC-5.5 | plan.md — Trazabilidad (US-5) | test-cases.md: TC-26 | ✅ |
-| US-6 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
-| AC-6.1 | plan.md — Trazabilidad (US-6) | test-cases.md: TC-27, TC-39 | ✅ |
-| US-7 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28, TC-40, TC-44 | ✅ |
-| AC-7.1 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-28 | ✅ |
-| AC-7.2 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-40 | ✅ |
-| AC-7.3 | plan.md — Trazabilidad (US-7) | test-cases.md: TC-44 | ✅ |
+|-----------|------|----------------|--------|
+| US-1 / AC-1.1 | plan.md — Trazabilidad (US-1) | TC-1 | ✅ |
+| US-1 / AC-1.2 | plan.md — Trazabilidad (US-1) | TC-2 | ✅ |
+| US-2 / AC-2.1 | plan.md — Trazabilidad (US-2) | TC-3 | ✅ |
+| US-2 / AC-2.2 | plan.md — Trazabilidad (US-2) | TC-4 | ✅ |
+| US-2 / AC-2.3 | plan.md — Trazabilidad (US-2) | TC-5, TC-6, TC-7 | ✅ |
+| US-2 / AC-2.4 | plan.md — Trazabilidad (US-2) | TC-8 | ✅ |
+| US-2 / AC-2.5 | plan.md — Trazabilidad (US-2) | TC-9, TC-10 | ✅ |
+| US-2 / AC-2.6 | plan.md — Trazabilidad (US-2) | TC-11 | ✅ |
+| US-2 / AC-2.7 | plan.md — Trazabilidad (US-2) | TC-12, TC-13 | ✅ |
+| US-2 / AC-2.8 | plan.md — Trazabilidad (US-2) | TC-14 | ✅ |
+| US-3 / AC-3.1 | plan.md — Trazabilidad (US-3) | TC-15 | ✅ |
+| US-3 / AC-3.2 | plan.md — Trazabilidad (US-3) | TC-16, TC-17, TC-18, TC-21 | ✅ |
+| US-3 / AC-3.3 | plan.md — Trazabilidad (US-3) | TC-19, TC-22 | ✅ |
+| US-3 / AC-3.4 | plan.md — Trazabilidad (US-3) | TC-20, TC-23 | ✅ |
+| US-3 / AC-3.5 | plan.md — Trazabilidad (US-3) | TC-24 | ✅ |
+| US-4 / AC-4.1 | plan.md — Trazabilidad (US-4) | TC-25 | ✅ |
+| US-4 / AC-4.2 | plan.md — Trazabilidad (US-4) | TC-26 | ✅ |
+| US-5 / AC-5.1 | plan.md — Trazabilidad (US-5) | TC-27 | ✅ |
+| US-5 / AC-5.2 | plan.md — Trazabilidad (US-5) | TC-28 | ✅ |
+| US-5 / AC-5.3 | plan.md — Trazabilidad (US-5) | TC-29 | ✅ |
+| US-5 / AC-5.4 | plan.md — Trazabilidad (US-5) | TC-30 | ✅ |
+| US-5 / AC-5.5 | plan.md — Trazabilidad (US-5) | TC-31 | ✅ |
+| US-6 / AC-6.1 | plan.md — Trazabilidad (US-6) | TC-32, TC-33 | ✅ |
+| US-7 / AC-7.1 | plan.md — Trazabilidad (US-7) | TC-34 | ✅ |
+| US-7 / AC-7.2 | plan.md — Trazabilidad (US-7) | TC-35 | ✅ |
+| US-7 / AC-7.3 | plan.md — Trazabilidad (US-7) | TC-36 | ✅ |
 
 > Nota: Las referencias "plan.md — Trazabilidad (US-X)" apuntan a la sección "Trazabilidad: cada US del spec → dónde se implementa en este plan" dentro de plan.md.
 
