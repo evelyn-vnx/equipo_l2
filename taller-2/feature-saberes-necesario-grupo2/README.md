@@ -53,7 +53,7 @@ Test Design
 - [x] Se consideran NFR relevantes
 
 #### Claridad
-- [ ] No existen términos ambiguos
+- [x] No existen términos ambiguos
 - [x] No existen requisitos vagos
 - [x] Los valores son específicos
 - [x] La redacción es verificable
@@ -61,7 +61,7 @@ Test Design
 #### Consistencia
 - [x] Terminología consistente
 - [x] Nombres consistentes
-- [ ] No existen contradicciones
+- [x] No existen contradicciones
 
 #### Testabilidad
 - [x] Todos los requisitos son verificables
@@ -69,12 +69,10 @@ Test Design
 - [x] No existen requisitos subjetivos
 
 ### Observaciones
-- El rol "Didi" se menciona sin definición en el spec (§1 y §5 asumption). El término "solucionario" se usa sin glosario.
-- AC-3.4 y AC-3.5: al seleccionar "Todos" en Estado, el sistema aplica el filtro por defecto "Activo" en lugar de mostrar todos los estados. 
-- US-7 scope dice "solo si no está en uso" pero AC-7.1 solo cubre el caso feliz sin AC explícito para bloqueo por saber en uso.
+- Sin observaciones
 
 ### Veredicto
-🟡 PASS CON OBSERVACIONES
+🟢 PASS
 
 ## Gate de consistencia
 
