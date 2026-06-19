@@ -106,6 +106,15 @@ Test Design
 | US-7 / AC-7.1 | plan.md — Trazabilidad (US-7) | TC-34 | ✅ |
 | US-7 / AC-7.2 | plan.md — Trazabilidad (US-7) | TC-35 | ✅ |
 | US-7 / AC-7.3 | plan.md — Trazabilidad (US-7) | TC-36 | ✅ |
+| **Casos límite (spec §4)** | | | |
+| Correlativo al llegar a 9999 | plan.md — ADR-7 | TC-37 | ✅ |
+| SVG malicioso con scripts | plan.md — ADR-5 + NFR-7 | TC-38 | ✅ |
+| Nombre idéntico en distinto tema | plan.md — ADR-4 | TC-42 | ✅ |
+| Nombre idéntico en distinto curso | plan.md — ADR-4 | TC-43 | ✅ |
+| Carga simultánea mismo nombre | plan.md — ADR-4 | TC-44 | ✅ |
+| **Assumptions (spec §5)** | | | |
+| Filtro de cursos restringido al usuario | plan.md — Trazabilidad (US-3) | TC-39 | ✅ |
+| Filtro de temas dinámico por curso | plan.md — Trazabilidad (US-3) | TC-40 | ✅ |
 
 > Nota: Las referencias "plan.md — Trazabilidad (US-X)" apuntan a la sección "Trazabilidad: cada US del spec → dónde se implementa en este plan" dentro de plan.md.
 
