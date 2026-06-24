@@ -1,0 +1,3 @@
+[submodule "taller-3/tools/enterprise-sdd"]
+	path = taller-3/tools/enterprise-sdd
+	url = https://gitlab.odiseo.pe/od-team/odiseo-backend.git
