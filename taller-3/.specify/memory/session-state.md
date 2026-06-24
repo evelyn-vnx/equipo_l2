@@ -9,10 +9,10 @@ reference_count: 0
 
 ## Active Feature
 
-- **Feature ID:** (none)
-- **Feature Name:** (none)
+- **Feature ID:** 001-feature-saberes-necesarios
+- **Feature Name:** feature saberes-necesarios
 - **Ceremony Level:** standard
-- **Current Phase:** —
+- **Current Phase:** Phase 1
 - **Last Gate Passed:** —
 - **Last Gate Timestamp:** —
 

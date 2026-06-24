@@ -1,0 +1,15 @@
+{
+  ".specify/specs/001-feature-saberes-necesarios/business-context.md": {
+    "phase": "1",
+    "sha256": "3fcb5f5cf79ab068282b561628ebb98a99e7bf8be0f06eff5d1820f5bdf5a934",
+    "written-at": "2026-06-24T20:14:54Z",
+    "written-by": "sdd-new"
+  },
+  ".specify/specs/001-feature-saberes-necesarios/spec.md": {
+    "phase": "1",
+    "sha256": "c1edc1c17b7e4730ab4dc673cb73672f149577eab102889c940320198098710c",
+    "written-at": "2026-06-24T20:14:54Z",
+    "written-by": "sdd-new"
+  },
+  "_schema": "Wave 23 \u00a723.B.4 \u2014 see .specify/templates/.artifact-hashes.example.json for the documented schema."
+}

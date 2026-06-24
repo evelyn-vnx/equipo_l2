@@ -1,0 +1,18 @@
+{
+  "featureId": "001-feature-saberes-necesarios",
+  "featureName": "feature saberes-necesarios",
+  "ceremonyLevel": "standard",
+  "template": "default",
+  "owner": "Rony Quispe",
+  "createdAt": "2026-06-24",
+  "status": "active",
+  "executionMode": "standard",
+  "autonomyBudget": 0,
+  "autonomyMaxIterations": 3,
+  "escalationThreshold": 3,
+  "autonomyItemLimit": 1,
+  "autonomyContextReset": "required-per-item",
+  "autonomyPersistenceRequired": true,
+  "fallbackExecutionMode": "standard",
+  "lastAutonomyStatus": "idle"
+}
